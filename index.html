@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="tr" data-tema="acik">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>İGSAŞ KHEM — Kimyasal Tehlike ve Etki Modeli</title>
+<style>
+/* ══ AÇIK TEMA (varsayılan) ══ */
+:root{
+  --zemin:#F2F4F7; --panel:#FFFF; --panel2:#F7F9FB; --cizgi:#E1E6EC;
+  --metin:#16202B; --soluk:#65748A; --parlak:#0000;
+  --nav:#FFFF; --navAktif:#FFF1E8;
+  --ust:#FFFF; --ustMetin:#16202B;
+  --golge:0 1px 3px rgba(20,35,55,.08);
+  --golgeK:0 4px 14px rgba(20,35,55,.10);
+  --kutuIc:#FFFF2;
+  --vurgu:#E85D04; --vurgu2:#FF7B2A;
+  --tehlike:#C1121F; --uyari:#B37F00; --iyi:#2D7A46; --bilgi:#1F5F9E;
+  --r:12px; --r2:8px;
+}
+/* ══ KOYU TEMA ══ */
+html[data-tema="koyu"]{
+  --zemin:#0D131A; --panel:#161F2A; --panel2:#1D2836; --cizgi:#2A3644;
+  --metin:#D6DEE9; --soluk:#7F8FA3; --parlak:#FFFF;
+  --nav:#131C25; --navAktif:#2A1B10;
+  --ust:#131C25; --ustMetin:#EDF2F7;
+  --golge:0 1px 3px rgba(0,0,0,.4);
+  --golgeK:0 4px 16px rgba(0,0,0,.5);
+  --kutuIc:#161F2AF2;
+  --uyari:#D99A00; --bilgi:#5EA0DC;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  background:var(--zemin);color:var(--metin);font-size:15px;line-height:1.45;
+  transition:background .25s,color .25s}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--cizgi);border-radius:4px}
+
+/* ── ÜST BAR ── */
+#uyg{display:flex;flex-direction:column;height:100%}
+header{background:var(--ust);border-bottom:1px solid var(--cizgi);
+  padding:9px 12px;display:flex;align-items:center;gap:10px;flex:none;box-shadow:var(--golge)}
+.logo{width:34px;height:34px;border-radius:9px;flex:none;
+  background:linear-gradient(140deg,var(--vurgu),#F59E0B);
+  display:flex;align-items:center;justify-content:center;font-size:18px}
+.mrk{line-height:1.15}
+.mrk .ad{font-size:15px;font-weight:800;letter-spacing:.3px;color:var(--ustMetin)}
+.mrk .alt{font-size:10px;font-weight:600;letter-spacing:1.4px;color:var(--vurgu)}
+.baslikYazi{font-size:11.5px;color:var(--soluk);margin-left:6px;display:none}
+@media(min-width:620px){.baslikYazi{display:block}}
+.ust-sag{margin-left:auto;display:flex;align-items:center;gap:7px}
+.bekra{font-size:10.5px;font-weight:800;letter-spacing:.5px;background:var(--vurgu);
+  color:#fff;padding:5px 11px;border-radius:999px;line-height:1.15;text-align:center}
+.bekra small{display:block;font-size:9px;font-weight:600;opacity:.9;letter-spacing:.3px}
+.tema-btn{width:36px;height:36px;border-radius:10px;border:1px solid var(--cizgi);
+  background:var(--panel2);color:var(--metin);font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center}
+.tema-btn:active{background:var(--cizgi)}
+
+/* ── GÖVDE + SOL NAV ── */
+#govde{display:flex;flex:1;overflow:hidden}
+nav.sol{width:60px;background:var(--nav);border-right:1px solid var(--cizgi);
+  display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:2px;flex:none;overflow-y:auto}
+nav.sol button{width:50px;padding:7px 0;border:none;border-radius:10px;background:none;
+  color:var(--soluk);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav.sol button .ik{font-size:17px;line-height:1}
+nav.sol button .lb{font-size:9px;font-weight:700;letter-spacing:.2px}
+nav.sol button:active{background:var(--panel2)}
+nav.sol button.aktif{background:var(--navAktif);color:var(--vurgu)}
+nav.sol .ayr{width:28px;height:1px;background:var(--cizgi);margin:5px 0}
+
+#icerik{flex:1;overflow-y:auto;padding-bottom:30px}
+.sayfa{display:none;padding:12px;max-width:820px}
+.sayfa.aktif{display:block}
+
+/* ── ORTAK ── */
+.kart{background:var(--panel);border:1px solid var(--cizgi);border-radius:var(--r);
+  padding:13px;margin-bottom:10px;box-shadow:var(--golge)}
+h2.bol{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;
+  color:var(--soluk);margin:14px 3px 7px}
+.izgara2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.izgara3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.hizali>div{display:flex;flex-direction:column}
+.hizali label.f{min-height:15px;display:flex;align-items:flex-end}
+.hizali .birim{min-height:15px}
+@media(max-width:520px){.izgara3{grid-template-columns:1fr 1fr}}
+
+/* ── KİMYASAL KARTLARI ── */
+.km-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media(min-width:700px){.km-grid{grid-template-columns:repeat(3,1fr)}}
+
+/* ── MASAÜSTÜ İKİ SÜTUN ── */
+@media(min-width:960px){
+  #icerik{
+    flex:0 0 48%;max-width:48%;
+    border-right:1px solid var(--cizgi);
+  }
+  #sag-panel{display:flex!important;flex-direction:column;gap:10px;
+    overflow-y:auto;padding:12px;flex:1}
+  nav.sol .lb{display:none}
+  nav.sol{width:48px}
+  nav.sol button{width:40px}
+  .sayfa{padding:10px}
+}
+
+/* ── SAĞ PANEL ── */
+#sag-panel{display:none;background:var(--zemin)}
+.sp-kart{background:var(--panel);border:1px solid var(--cizgi);border-radius:var(--r);
+  padding:11px 13px;box-shadow:var(--golge)}
+.sp-bant{border-radius:var(--r2);padding:8px 11px;margin-bottom:5px;
+  border:1px solid var(--bk);border-left:4px solid var(--bk);
+  background:color-mix(in srgb,var(--bk) 8%,var(--panel));
+  display:flex;justify-content:space-between;align-items:center}
+.sp-bant .ad{font-size:11px;font-weight:700;color:var(--bk)}
+.sp-bant .msf{font-size:16px;font-weight:800;color:var(--bk);font-variant-numeric:tabular-nums}
+.sp-bos{text-align:center;padding:16px 8px;color:var(--soluk);font-size:12px}
+#sp-mini-wrap{position:relative;border:1px solid var(--cizgi);border-radius:var(--r);
+  overflow:hidden;background:var(--panel2);cursor:pointer;min-height:160px;
+  display:flex;align-items:center;justify-content:center}
+#miniKanvas{display:block;width:100%;cursor:pointer}
+.mini-ust{position:absolute;bottom:6px;right:6px;background:var(--kutuIc);
+  border:1px solid var(--cizgi);border-radius:6px;padding:3px 7px;font-size:10px;
+  font-weight:700;color:var(--vurgu)}
+.sp-flash{background:color-mix(in srgb,#2D7A46 10%,var(--panel));border:1px solid #2D7A46;
+  border-radius:var(--r2);padding:7px 10px;font-size:11.5px;margin-top:6px}
+.sn-kart{background:var(--panel);border:1px solid var(--cizgi);border-radius:var(--r);
+  padding:11px 13px;margin-bottom:8px;cursor:pointer;box-shadow:var(--golge);
+  transition:border-color .15s,box-shadow .15s;display:flex;align-items:center;gap:10px}
+.sn-kart:active{border-color:var(--vurgu)}
+.sn-kart .sn-ren{width:5px;border-radius:3px;align-self:stretch;flex:none}
+.sn-kart .sn-ic{flex:1;min-width:0}
+.sn-kart .sn-ad{font-weight:700;font-size:13.5px}
+.sn-kart .sn-alt{font-size:11.5px;color:var(--soluk);margin-top:3px}
+.sn-kart .sn-ms{font-size:12px;color:var(--soluk);text-align:right;white-space:nowrap}
+.sn-kart .sn-sil{font-size:16px;color:var(--soluk);padding:4px;flex:none;line-height:1;
+  border:none;background:none;cursor:pointer;border-radius:6px}
+.sn-kart .sn-sil:active{background:var(--cizgi)}
+.gecmis-bos{text-align:center;padding:24px 12px;color:var(--soluk);font-size:13px}
+.km{position:relative;background:var(--panel);border:1.5px solid var(--cizgi);
+  border-radius:var(--r);padding:12px 12px 11px;cursor:pointer;box-shadow:var(--golge);
+  transition:border-color .18s,box-shadow .18s,transform .12s}
+.km:active{transform:scale(.985)}
+.km.secili{border-color:var(--kr);box-shadow:0 0 0 3px color-mix(in srgb,var(--kr) 18%,transparent),var(--golgeK)}
+.km .frm{font-size:24px;font-weight:800;line-height:1.05;color:var(--kr);letter-spacing:-.5px}
+.km .frm sub{font-size:.62em;font-weight:700}
+.km .isim{font-size:13.5px;font-weight:700;margin-top:5px}
+.km .mdl{font-size:11.5px;color:var(--soluk);margin-top:7px;display:flex;align-items:center;gap:4px}
+.km .rz{position:absolute;top:10px;right:10px;font-size:9.5px;font-weight:800;letter-spacing:.3px;
+  padding:3px 7px;border-radius:6px;background:var(--panel2);color:var(--soluk);border:1px solid var(--cizgi)}
+.km.secili .rz{background:var(--kr);color:#fff;border-color:var(--kr)}
+
+/* ── FORM ── */
+label.f{display:block;font-size:11px;font-weight:700;color:var(--soluk);
+  margin:10px 0 4px;letter-spacing:.2px}
+input.f,select.f,textarea.f{width:100%;font-family:inherit;font-size:14px;padding:9px 10px;
+  border:1px solid var(--cizgi);border-radius:var(--r2);background:var(--panel2);color:var(--metin)}
+input.f:focus,select.f:focus{outline:2px solid var(--vurgu);outline-offset:-1px;border-color:var(--vurgu)}
+.birim{font-size:11px;color:var(--soluk);margin-top:3px;display:block}
+.ipucu{font-size:12px;color:var(--soluk);line-height:1.5}
+.not{font-size:12px;padding:9px 11px;border-radius:var(--r2);background:var(--panel2);
+  border:1px solid var(--cizgi);border-left:3px solid var(--bilgi);color:var(--metin);margin-top:8px}
+.not.uyari{border-left-color:var(--uyari)}
+.not.kirmizi{border-left-color:var(--tehlike)}
+
+/* ── BUTON ── */
+button.btn{font-family:inherit;font-size:14px;font-weight:700;border:none;
+  border-radius:var(--r2);padding:10px 14px;cursor:pointer}
+.btn-ana{background:var(--vurgu);color:#fff;box-shadow:0 1px 4px rgba(232,93,4,.28)}
+.btn-ana:active{background:var(--vurgu2)}
+.btn-ik{background:var(--panel2);color:var(--metin);border:1px solid var(--cizgi)}
+.btn-ik:active{background:var(--cizgi)}
+.btn-blok{width:100%;margin-top:9px}
+.btn-kk{font-size:12px;padding:7px 10px}
+.btn-sira{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+.btn-sira .btn{flex:1;min-width:110px}
+
+/* ── KAYNAK SEKMELERİ ── */
+.ks-tab{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+@media(min-width:600px){.ks-tab{grid-template-columns:repeat(4,1fr)}}
+.ks-tab button{font-size:12px;font-weight:700;padding:9px 6px;border:1px solid var(--cizgi);
+  border-radius:var(--r2);background:var(--panel);color:var(--soluk);cursor:pointer}
+.ks-tab button.ak{background:var(--vurgu);color:#fff;border-color:var(--vurgu)}
+
+/* ── SONUÇ BANTLARI ── */
+.bant{border-radius:var(--r2);padding:11px 13px;margin-bottom:7px;
+  border:1px solid var(--bk);border-left:5px solid var(--bk);
+  background:color-mix(in srgb,var(--bk) 9%,var(--panel))}
+.bant .st{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.bant .msf{font-size:23px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--bk)}
+.bant .etk{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--bk)}
+.bant .ac{font-size:12px;margin-top:4px;color:var(--soluk)}
+
+/* ── HARİTA ── */
+#haritaKap{position:relative;border:1px solid var(--cizgi);border-radius:var(--r);
+  overflow:hidden;background:var(--panel2);box-shadow:var(--golge)}
+#hKanvas{display:block;width:100%;touch-action:none;cursor:grab}
+.h-zoom{position:absolute;top:9px;right:9px;z-index:6;display:flex;flex-direction:column;gap:5px}
+.h-zoom button{width:38px;height:38px;border-radius:10px;border:1px solid var(--cizgi);
+  background:var(--kutuIc);color:var(--metin);font-size:19px;font-weight:700;cursor:pointer;
+  box-shadow:var(--golge);display:flex;align-items:center;justify-content:center}
+.h-zoom button:active{background:var(--cizgi)}
+.h-msj{position:absolute;top:9px;left:9px;z-index:7;background:var(--vurgu);color:#fff;
+  font-size:12px;font-weight:700;padding:8px 11px;border-radius:9px;max-width:62%;
+  box-shadow:var(--golgeK);display:none;cursor:pointer;
+  animation:nabiz 1.6s ease-in-out infinite}
+@keyframes nabiz{0%,100%{box-shadow:0 0 0 0 rgba(232,93,4,.45)}50%{box-shadow:0 0 0 7px rgba(232,93,4,0)}}
+.h-lgn{position:absolute;bottom:9px;left:9px;z-index:6;background:var(--kutuIc);
+  border:1px solid var(--cizgi);border-radius:9px;padding:7px 9px;box-shadow:var(--golge);display:none}
+.h-lgn .sr{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;margin-bottom:3px}
+.h-lgn .sr:last-child{margin-bottom:0}
+.h-lgn .nk{width:11px;height:11px;border-radius:3px;flex:none}
+
+/* ── PATLAMA HALKALARI ── */
+.halka{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--r2);
+  margin-bottom:6px;border:1px solid var(--bk);border-left:5px solid var(--bk);
+  background:color-mix(in srgb,var(--bk) 9%,var(--panel))}
+.halka .yc{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--bk);min-width:86px}
+.halka .tn b{display:block;font-size:13px}
+.halka .tn{font-size:11.5px;color:var(--soluk)}
+
+/* ── TABLO ── */
+table.t{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+table.t th,table.t td{padding:7px 8px;font-size:12.5px;border-bottom:1px solid var(--cizgi);text-align:left}
+table.t th{font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--soluk)}
+table.t td.sag,table.t th.sag{text-align:right}
+table.t tr:last-child td{border-bottom:none}
+
+/* ── ADIM GÖSTERGESİ ── */
+.adimlar{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;
+  color:var(--soluk);margin-bottom:10px;flex-wrap:wrap}
+.adimlar span.a{padding:4px 9px;border-radius:999px;background:var(--panel2);border:1px solid var(--cizgi)}
+.adimlar span.a.ok{background:color-mix(in srgb,var(--iyi) 14%,var(--panel));color:var(--iyi);border-color:var(--iyi)}
+.adimlar span.a.simdi{background:var(--vurgu);color:#fff;border-color:var(--vurgu)}
+
+/* ── YAZDIRMA ── */
+#rapAlan{display:none}
+@page{size:A4;margin:13mm 12mm}
+@media print{
+  html,body{overflow:visible;height:auto;background:#fff;margin:0;padding:0}
+  #uyg{display:none!important}
+  #rapAlan{display:block!important;position:static;width:100%;
+    color:#14202C;font-size:10.5pt;line-height:1.42}
+  #rapAlan *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+  /* başlık bandı */
+  .r-ust{display:flex;align-items:center;gap:10px;border-bottom:3px solid #E85D04;
+    padding-bottom:7px;margin-bottom:9px}
+  .r-logo{width:34px;height:34px;border-radius:8px;background:#E85D04;color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800}
+  .r-mrk .a{font-size:15pt;font-weight:800;letter-spacing:.5px;line-height:1.1}
+  .r-mrk .b{font-size:8pt;font-weight:700;letter-spacing:1.6px;color:#E85D04}
+  .r-ust .sag{margin-left:auto;text-align:right;font-size:8.5pt;color:#5B6875;line-height:1.5}
+  .r-ust .sag b{color:#14202C;font-size:9.5pt}
+
+  .r-baslik{font-size:14pt;font-weight:800;letter-spacing:.2px;margin:0 0 3px}
+  .r-altbaslik{font-size:8.6pt;color:#5B6875;margin-bottom:8px}
+
+  .r-uyari{border:1px solid #E0B080;background:#FFF6EC;border-left:4px solid #E85D04;
+    padding:6px 9px;font-size:8.2pt;margin-bottom:9px;border-radius:3px}
+
+  h2.r-bol{font-size:10pt;font-weight:800;text-transform:uppercase;letter-spacing:.8px;
+    color:#14202C;margin:11px 0 5px;padding-bottom:3px;border-bottom:1.5px solid #D8DEE6}
+  h2.r-bol span{display:inline-block;background:#14202C;color:#fff;width:16px;height:16px;
+    border-radius:4px;text-align:center;line-height:16px;font-size:8.5pt;margin-right:6px}
+
+  /* kimyasal şeridi */
+  .r-kim{display:flex;align-items:center;gap:10px;border:1px solid #D8DEE6;border-left:5px solid var(--kk);
+    border-radius:5px;padding:7px 11px;margin-bottom:7px;background:#FAFBFC}
+  .r-kim .frm{font-size:17pt;font-weight:800;color:var(--kk);line-height:1}
+  .r-kim .ad{font-size:11pt;font-weight:700}
+  .r-kim .md{font-size:8.5pt;color:#5B6875}
+  .r-kim .rz{margin-left:auto;border:1px solid var(--kk);color:var(--kk);border-radius:4px;
+    padding:3px 9px;font-size:8pt;font-weight:800}
+
+  /* bilgi ızgarası */
+  .r-bilgi{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid #D8DEE6;border-radius:5px;overflow:hidden}
+  .r-bilgi div{padding:5px 9px;border-bottom:1px solid #E6EAEF;font-size:8.8pt}
+  .r-bilgi div:nth-child(2n){border-left:1px solid #E6EAEF}
+  .r-bilgi div:nth-last-child(-n+2){border-bottom:none}
+  .r-bilgi .e{display:block;font-size:7.5pt;color:#6B7684;text-transform:uppercase;letter-spacing:.6px;margin-bottom:1px}
+  .r-bilgi .d{font-weight:700}
+
+  /* birleşik tehlike tablosu */
+  table.r-t{width:100%;border-collapse:collapse;margin-top:5px}
+  table.r-t th{background:#14202C;color:#fff;font-size:7.8pt;text-transform:uppercase;
+    letter-spacing:.5px;padding:5px 7px;text-align:left;font-weight:700}
+  table.r-t td{border:1px solid #D8DEE6;padding:5px 7px;font-size:8.8pt;vertical-align:middle}
+  table.r-t tr:nth-child(even) td{background:#FAFBFC}
+  table.r-t td.sag{text-align:right;font-variant-numeric:tabular-nums}
+  table.r-t td.esik{font-weight:800;color:var(--zk);white-space:nowrap;border-left:4px solid var(--zk)}
+  .r-mb{display:flex;align-items:center;gap:6px}
+  .r-mb .cb{flex:1;height:9px;border-radius:2px;background:#EDF0F4;border:1px solid #DEE3EA;overflow:hidden;min-width:34px}
+  .r-mb .cb i{display:block;height:100%;background:var(--zk)}
+  .r-mb .ms{font-weight:800;font-size:9.6pt;color:var(--zk);white-space:nowrap;
+    font-variant-numeric:tabular-nums;min-width:52px;text-align:right}
+
+  .r-mudahale{border:1px solid #D8DEE6;border-left:4px solid #C1121F;background:#FEF6F6;
+    padding:7px 10px;border-radius:4px;font-size:8.8pt;margin-top:6px}
+  .r-mudahale b{display:block;margin-bottom:3px}
+
+  .r-harita{width:100%;max-height:70mm;object-fit:contain;border:1px solid #D8DEE6;border-radius:5px;margin-top:5px;background:#F4F6F8}
+  .r-hnot{font-size:8pt;color:#6B7684;margin-top:3px;text-align:center}
+
+  .r-imz{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:16px}
+  .r-imz div{border-top:1px solid #14202C;padding-top:5px;font-size:8.5pt;font-weight:700}
+  .r-imz div span{display:block;font-weight:400;color:#6B7684;font-size:7.5pt;margin-top:11px}
+
+  .r-alt{margin-top:16px;padding-top:7px;border-top:1px solid #D8DEE6;
+    font-size:7.5pt;color:#7B8694;display:flex;justify-content:space-between}
+
+  .kesme{page-break-inside:avoid;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div id="uyg">
+<header>
+  <div class="logo">⚗️</div>
+  <div class="mrk"><div class="ad">İGSAŞ</div><div class="alt">KHEM</div></div>
+  <span class="baslikYazi">Kimyasal Tehlike ve Etki Modeli</span>
+  <div class="ust-sag">
+    <span class="bekra">BEKRA</span>
+    <button class="tema-btn" id="temaBtn" onclick="temaDegistir()" title="Gece modu">🌙</button>
+  </div>
+</header>
+
+<div id="govde">
+<nav class="sol">
+  <button id="nb-kimyasal" class="aktif" onclick="sayfaGec('kimyasal')"><span class="ik">🧪</span><span class="lb">Kimya</span></button>
+  <button id="nb-kaynak" onclick="sayfaGec('kaynak')"><span class="ik">⚙️</span><span class="lb">Kaynak</span></button>
+  <button id="nb-atmosfer" onclick="sayfaGec('atmosfer')"><span class="ik">🌤</span><span class="lb">Atmosfer</span></button>
+  <button id="nb-sonuc" onclick="sayfaGec('sonuc')"><span class="ik">📊</span><span class="lb">Sonuç</span></button>
+  <div class="ayr"></div>
+  <button id="nb-harita" onclick="sayfaGec('harita')"><span class="ik">🗺</span><span class="lb">Harita</span></button>
+  <button id="nb-patlama" onclick="sayfaGec('patlama')"><span class="ik">💥</span><span class="lb">Patlama</span></button>
+  <div class="ayr"></div>
+  
+  <button id="nb-senaryo" onclick="sayfaGec('senaryo')"><span class="ik">📋</span><span class="lb">Senaryo</span></button>
+<button id="nb-gecmis" onclick="sayfaGec('gecmis')"><span class="ik">🕐</span><span class="lb">Geçmiş</span></button>
+  <button id="nb-rapor" onclick="rapOlustur()"><span class="ik">📄</span><span class="lb">Rapor</span></button>
+</nav>
+
+<div id="icerik">
+
+<!-- ═══ KİMYASAL ═══ -->
+<div class="sayfa aktif" id="sayfa-kimyasal">
+  <div class="adimlar" id="adimGost"></div>
+  <h2 class="bol">Senaryo kimyasalı</h2>
+  <div class="km-grid" id="kmGrid"></div>
+  <div id="kmBilgi"></div>
+</div>
+
+<!-- ═══ KAYNAK ═══ -->
+<div class="sayfa" id="sayfa-kaynak">
+  <div class="adimlar" id="adimGost2"></div>
+  <h2 class="bol">Salım kaynak modeli</h2>
+  <div class="ks-tab">
+    <button class="ak" id="kt-delik" onclick="kaynakTab('delik')">🔩 Delik / Flanş</button>
+    <button id="kt-tank" onclick="kaynakTab('tank')">🛢 Tank Kaçağı</button>
+    <button id="kt-havuz" onclick="kaynakTab('havuz')">💧 Havuz</button>
+    <button id="kt-anlik" onclick="kaynakTab('anlik')">⚡ Anlık Salım</button>
+  </div>
+
+  <div id="ks-delik" class="kart">
+    <b>Boru / Flanş Deliği</b>
+    <p class="ipucu" style="margin-top:4px">Basınçlı hattan gaz kaçışı. Hat basıncı atmosferin ~1,9 katını aşarsa akış boğulur (ses hızına ulaşır) ve debi yalnızca delik alanı, basınç ve sıcaklığa bağlı kalır.</p>
+    <div class="izgara3">
+      <div><label class="f">Delik çapı (mm)</label><input class="f" type="number" id="dCap" value="10" step="1" min="0.5"><span class="birim">Flanş sızıntısı ≈ 3–10 mm</span></div>
+      <div><label class="f">Hat basıncı (barg)</label><input class="f" type="number" id="dBasinc" value="8" step="0.5"></div>
+      <div><label class="f">Sıcaklık (°C)</label><input class="f" type="number" id="dSicaklik" value="25" step="1"></div>
+    </div>
+    <div class="not" id="dBilgi">Hesapla düğmesine basınca debi burada görünür.</div>
+    <div id="nh3DepoDiv" style="display:none;margin-top:6px">
+      <label class="f">NH₃ depo sıcaklığı (°C) <span style="font-weight:400;color:var(--soluk)">— flaş buharlaşma modeli için</span></label>
+      <input class="f" type="number" id="nh3DepoT" value="25" step="1" min="-33" max="60">
+      <span class="birim">Kaynama noktası: −33,3 °C · Tipik depo: 20–40 °C</span>
+    </div>
+  </div>
+
+  <div id="ks-tank" class="kart" style="display:none">
+    <b>Tank Kaçağı (sıvı, zamanla azalan)</b>
+    <p class="ipucu" style="margin-top:4px">Torricelli çıkış hızı. Tank boşaldıkça sıvı yüksekliği düşer, debi de düşer — ilk 10 dakikanın ortalaması kullanılır.</p>
+    <div class="izgara3">
+      <div><label class="f">Delik çapı (mm)</label><input class="f" type="number" id="tCap" value="25" step="1"></div>
+      <div><label class="f">Sıvı seviyesi (m)</label><input class="f" type="number" id="tSeviye" value="5" step="0.5"></div>
+      <div><label class="f">Tank kesiti (m²)</label><input class="f" type="number" id="tAlan" value="50" step="5"></div>
+    </div>
+    <label class="f">Sıvı yoğunluğu (kg/m³)</label>
+    <input class="f" type="number" id="tYog" value="682" step="10">
+    <span class="birim">Sıvı NH₃ ≈ 682 · HNO₃ %65 ≈ 1391 · sıvı CO₂ ≈ 770</span>
+    <div class="not" id="tBilgi">Hesapla düğmesine basınca debi burada görünür.</div>
+    <div id="nh3DepoDiv2" style="display:none;margin-top:6px">
+      <label class="f">NH₃ depo sıcaklığı (°C)</label>
+      <input class="f" type="number" id="nh3DepoT2" value="25" step="1" min="-33" max="60">
+      <span class="birim">Kaynama noktası: −33,3 °C</span>
+    </div>
+  </div>
+
+  <div id="ks-havuz" class="kart" style="display:none">
+    <b>Havuz Buharlaşması</b>
+    <p class="ipucu" style="margin-top:4px">Dökülen sıvının yüzeyden buharlaşma debisi. Buhar basıncı Antoine denkleminden, kütle transferi rüzgâr hızından hesaplanır.</p>
+    <div class="izgara3">
+      <div><label class="f">Havuz alanı (m²)</label><input class="f" type="number" id="hAlan" value="50" step="5"><span class="birim">Bund alanı</span></div>
+      <div><label class="f">Sıvı sıcaklığı (°C)</label><input class="f" type="number" id="hSicak" value="25" step="1"></div>
+      <div><label class="f">Rüzgâr hızı (m/s)</label><input class="f" type="number" id="hRuzgar" value="3" step="0.5"></div>
+    </div>
+    <div class="not" id="hBilgi">Hesapla düğmesine basınca debi burada görünür.</div>
+  </div>
+
+  <div id="ks-anlik" class="kart" style="display:none">
+    <b>Anlık Salım (puff)</b>
+    <p class="ipucu" style="margin-top:4px">Kap patlaması veya BLEVE — tüm kütle tek seferde açığa çıkar. En kötü durum senaryosu.</p>
+    <label class="f">Toplam kütle (kg)</label>
+    <input class="f" type="number" id="aKutle" value="1000" step="100">
+    <div class="not uyari">Anlık salımda bulut hem rüzgâr yönünde hem yanal olarak yayılır; mesafeler sürekli salımdan farklı yorumlanmalıdır.</div>
+  </div>
+
+  <div class="btn-sira">
+    <button class="btn btn-ik" onclick="sayfaGec('kimyasal')">← Kimyasal</button>
+    <button class="btn btn-ana" onclick="kaynakHesapla()">Hesapla ve Devam →</button>
+  </div>
+</div>
+
+<!-- ═══ ATMOSFER ═══ -->
+<div class="sayfa" id="sayfa-atmosfer">
+  <div class="adimlar" id="adimGost3"></div>
+  <h2 class="bol">Atmosferik koşullar</h2>
+  <div class="kart">
+    <div class="izgara2 hizali">
+      <div><label class="f">Rüzgâr hızı (m/s)</label><input class="f" type="number" id="aRuz" value="3" step="0.5" min="0.5"><span class="birim">Körfez tipik 2–5</span></div>
+      <div><label class="f">Rüzgâr yönü (°)</label><input class="f" type="number" id="aYon" value="270" step="5" min="0" max="360"><span class="birim">270° = batıdan eser</span></div>
+    </div>
+    <div>
+      <div><label class="f">Kararlılık sınıfı</label>
+        <select class="f" id="aSinif">
+          <option value="A">A — Çok kararsız</option>
+          <option value="B">B — Kararsız</option>
+          <option value="C">C — Az kararsız</option>
+          <option value="D" selected>D — Nötr (tipik gündüz)</option>
+          <option value="E">E — Az kararlı (gece)</option>
+          <option value="F">F — Kararlı (sakin gece)</option>
+        </select>
+      </div>
+    </div>
+    <div class="not uyari">En kötü durum senaryosu için <b>F sınıfı + 1,5 m/s</b> kullanılır: sakin ve açık bir gecede atmosfer durgundur, bulut seyrelmeden kilometrelerce ilerler.</div>
+  </div>
+
+  <div class="kart">
+    <b style="font-size:13px">Kararlılık sınıfı seçim rehberi</b>
+    <table class="t" style="margin-top:6px">
+      <tr><th>Sınıf</th><th>Gündüz</th><th>Gece</th><th>Etki</th></tr>
+      <tr><td><b>A–B</b></td><td>Güneşli, rüzgâr &lt;3 m/s</td><td>—</td><td>En kısa mesafe</td></tr>
+      <tr><td><b>C–D</b></td><td>Bulutlu veya orta rüzgâr</td><td>Çok bulutlu</td><td>Orta</td></tr>
+      <tr><td><b>E–F</b></td><td>—</td><td>Açık, rüzgâr &lt;2 m/s</td><td style="color:var(--tehlike);font-weight:700">En uzun mesafe</td></tr>
+    </table>
+  </div>
+
+  <div class="btn-sira">
+    <button class="btn btn-ik" onclick="sayfaGec('kaynak')">← Kaynak</button>
+    <button class="btn btn-ana" onclick="dagilimHesapla()">Dağılımı Hesapla →</button>
+  </div>
+</div>
+
+<!-- ═══ SONUÇ ═══ -->
+<div class="sayfa" id="sayfa-sonuc"><div id="sonucIc"></div></div>
+
+<!-- ═══ HARİTA ═══ -->
+<div class="sayfa" id="sayfa-harita">
+  <div class="kart" id="hYukleKart" style="display:none">
+    <b>Tesis fotoğrafını değiştir</b>
+    <p class="ipucu" style="margin-top:4px">Yeni bir hava fotoğrafı yükleyin. Ölçek yeniden kalibre edilmelidir.</p>
+    <input type="file" id="hDosya" accept="image/*" onchange="haritaYukle(this)" style="margin-top:8px">
+    <button class="btn btn-ik btn-blok btn-kk" onclick="document.getElementById('hYukleKart').style.display='none'">Vazgeç</button>
+  </div>
+  <div id="haritaKap">
+    <div class="h-msj" id="hMsj" onclick="moduIptal()"></div>
+    <div class="h-msj" id="hUyari" style="background:#C1121F;display:none;top:52px" onclick="this.style.display='none'"></div>
+    <div class="h-zoom">
+      <button onclick="zoomAdim(1.5)" title="Yakınlaştır">+</button>
+      <button onclick="zoomAdim(1/1.5)" title="Uzaklaştır">−</button>
+      <button onclick="zoomSifirla()" title="Tam görünüm" style="font-size:15px">⌂</button>
+    </div>
+    <div class="h-lgn" id="hLgn"></div>
+    <canvas id="hKanvas"></canvas>
+  </div>
+  <div class="btn-sira">
+    <button class="btn btn-ik btn-kk" onclick="kalibrasyonBaslat()">📏 Kalibre Et</button>
+    <button class="btn btn-ana btn-kk" onclick="plumeKaynakSec()">🌬 Plume Çiz</button>
+    <button class="btn btn-ik btn-kk" onclick="plumeSil()">Temizle</button>
+    <button class="btn btn-ik btn-kk" onclick="document.getElementById('hYukleKart').style.display='block'">📷 Değiştir</button>
+  </div>
+  <div class="ipucu" id="kalibreDurum" style="margin-top:7px"></div>
+</div>
+
+<!-- ═══ PATLAMA ═══ -->
+<div class="sayfa" id="sayfa-patlama">
+  <h2 class="bol">NH₄NO₃ patlama etki analizi</h2>
+  <div class="kart">
+    <p class="ipucu">TNT eşdeğeri yöntemi. Amonyum nitrat için ana tehlike dağılım değil, detonasyon aşırı basıncıdır (BEKRA Kategori E).</p>
+    <div class="izgara3">
+      <div><label class="f">NH₄NO₃ miktarı (kg)</label><input class="f" type="number" id="pKutle" value="1000" step="100"></div>
+      <div><label class="f">Dönüşüm verimi</label>
+        <select class="f" id="pVerim">
+          <option value="0.40">%40 — yasal en kötü durum</option>
+          <option value="0.08" selected>%8 — teknik referans (TNO)</option>
+          <option value="0.03">%3 — gerçekçi depolama</option>
+        </select>
+      </div>
+      <div><label class="f">Patlama ısısı oranı</label>
+        <select class="f" id="pEnerji">
+          <option value="0.354" selected>NH₄NO₃ / TNT = 0,354</option>
+          <option value="0.30">Muhafazakâr 0,30</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-ana btn-blok" onclick="patlamaHesapla()">Patlama Bölgelerini Hesapla</button>
+  </div>
+  <div id="patSonuc"></div>
+</div>
+
+<!-- ═══ SENARYO ŞABLONLARI ═══ -->
+<div class="sayfa" id="sayfa-senaryo">
+  <h2 class="bol">Hazır İGSAŞ Senaryoları</h2>
+  <p class="ipucu" style="margin-bottom:10px">Sahada zaman kazandırır. Bir şablona dokunarak tüm girdileri (kimyasal, kaynak, atmosfer) tek tıkla hazırlayın.</p>
+  <div id="senaryoListe"></div>
+</div>
+
+<!-- ═══ SENARYO GEÇMİŞİ ═══ -->
+<div class="sayfa" id="sayfa-gecmis">
+  <h2 class="bol">Kayıtlı senaryolar</h2>
+  <p class="ipucu" style="margin-bottom:10px">Her hesaplamadan sonra senaryo otomatik kaydedilir. Tek dokunuşla yeniden yükleyebilirsiniz.</p>
+  <div id="gecmisListesi"></div>
+  <div class="not" style="margin-top:10px">Son 10 senaryo saklanır. Eski senaryolar otomatik silinir.</div>
+</div>
+
+</div><!-- /icerik -->
+
+<!-- ═══ SAĞ PANEL (masaüstü) ═══ -->
+<div id="sag-panel">
+  <!-- Senaryo özeti -->
+  <div class="sp-kart" id="sp-sonuc-kart">
+    <h2 class="bol" style="margin-top:4px">Güncel sonuç</h2>
+    <div id="sp-sonuc-ic"><div class="sp-bos">📊 Kimyasal → Kaynak → Atmosfer adımlarını tamamlayın.</div></div>
+  </div>
+
+  <!-- Mini harita -->
+  <div class="sp-kart" style="padding:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+      <span style="font-size:11px;font-weight:700;color:var(--soluk)">TESİS HARİTASI</span>
+      <button class="btn btn-ik btn-kk" onclick="sayfaGec('harita')" style="font-size:10px;padding:3px 8px">Tam Ekran →</button>
+    </div>
+    <div id="sp-mini-wrap" onclick="sayfaGec('harita')">
+      <canvas id="miniKanvas"></canvas>
+      <span class="mini-ust">🗺 Haritaya git</span>
+    </div>
+    <div class="ipucu" id="sp-kalib-dur" style="margin-top:4px"></div>
+  </div>
+
+  <!-- Flash fraksiyon notu (NH₃ seçiliyse) -->
+  <div class="sp-flash" id="sp-flash-not" style="display:none"></div>
+</div>
+
+</div><!-- /govde -->
+</div><!-- /uyg -->
+<div id="rapAlan"></div>
+<script>
+/* ════ KİMYASAL VERİTABANI ════ */
+
+/* ════ NH₃ BASINÇLI SIVI — FLAŞ BUHARLAŞMA + AEROSOL MODELİ ════
+   Kaynaklar: Beychok (flaş denklemi), TNO Yellow Book CPR 14E (aerosol sürüklenme)
+   Bu fonksiyonlar tanımlı olmadığı için uygulama daha önce çöküyordu. */
+function nh3FlashFrac(T_depoC){
+  if(T_depoC===undefined||T_depoC===null||isNaN(T_depoC))T_depoC=25;
+  const Cp=4.7, dHvap=1371, Tb=-33.3;
+  if(T_depoC<=Tb)return 0;
+  let f=(Cp*(T_depoC-Tb))/dHvap;
+  return Math.max(0,Math.min(1,f));
+}
+function nh3BulutYog(flashFrac){
+  if(flashFrac===undefined||isNaN(flashFrac))flashFrac=0.18;
+  const rhoGazVapor=0.73, rhoSivi=682;
+  const aerosolFrac=flashFrac>=1?0:(1-flashFrac)*0.8;
+  const toplamKutle=flashFrac+aerosolFrac;
+  const hacim=(flashFrac/rhoGazVapor)+(aerosolFrac/rhoSivi);
+  if(hacim<=0)return rhoGazVapor;
+  return toplamKutle/hacim;
+}
+function nh3FAirborne(T_depoC){
+  if(T_depoC===undefined||isNaN(T_depoC))T_depoC=25;
+  const f=nh3FlashFrac(T_depoC);
+  const tmp=0.70+0.25*f;
+  return Math.max(0.5,Math.min(0.97,tmp));
+}
+
+const KDB={
+ NH3:{ad:"Amonyak",sembol:"NH<sub>3</sub>",duz:"NH₃",renk:"#E85D04",bekra:"P5",
+  mol:17.03,kaynama:-33.3,yogunlukGaz:0.73,yogunlukSivi:682,hafif:true,
+  vaporB:{A:16.9481,B:2132.5,C:236.0},
+  erpg:{e1:25,e2:150,e3:750},idlh:300,lfl:15,ufl:28,yaniciMi:true,model:"Gauss",
+  aciklama:"Sıvılaştırılmış basınçlı amonyak. Kaçakta ani flaş buharlaşma ve aerosol oluşur. Gaz fazı havadan hafiftir, yükselerek dağılır.",
+  onlem:"Rüzgâr altına gidilmez. Tahliye rüzgâra dik yönde yapılır. Tam yüz maskesi ve buhar geçirmez tulum gerekir."},
+ HNO3:{ad:"Nitrik Asit %65",sembol:"HNO<sub>3</sub>",duz:"HNO₃",renk:"#C1121F",bekra:"C",
+  mol:63.01,kaynama:83,yogunlukGaz:2.58,yogunlukSivi:1391,hafif:false,
+  vaporB:{A:7.87,B:1826,C:228},
+  erpg:{e1:1,e2:6,e3:25},idlh:25,lfl:null,ufl:null,yaniciMi:false,model:"Yoğun gaz",
+  aciklama:"Buharlaşınca kırmızı-kahverengi NO₂ açığa çıkarır. Buhar havadan ağırdır; çukurlarda ve zemin seviyesinde birikir.",
+  onlem:"Zemin seviyesinde birikime dikkat. Solunum koruması zorunlu. Nem ile birleşince gecikmeli akciğer ödemi yapar."},
+ NO2:{ad:"Azot Dioksit",sembol:"NO<sub>2</sub>",duz:"NO₂",renk:"#8B1A1A",bekra:"C",
+  mol:46.01,kaynama:21.2,yogunlukGaz:1.87,yogunlukSivi:1447,hafif:false,
+  vaporB:{A:7.38,B:1296,C:237},
+  erpg:{e1:1,e2:20,e3:30},idlh:20,lfl:null,ufl:null,yaniciMi:false,model:"Yoğun gaz",
+  aciklama:"Kırmızı-kahverengi keskin duman. Havadan belirgin şekilde ağırdır. Nitrik asit ünitesinin karakteristik salımı.",
+  onlem:"Belirtiler 4–24 saat gecikebilir; maruz kalan herkes belirtisiz olsa dahi gözlem altına alınır."},
+ NH4NO3:{ad:"Amonyum Nitrat",sembol:"NH<sub>4</sub>NO<sub>3</sub>",duz:"NH₄NO₃",renk:"#7C2D12",bekra:"E",
+  mol:80.04,kaynama:null,yogunlukGaz:null,yogunlukSivi:1725,hafif:null,model:"Patlama",
+  erpg:null,idlh:null,
+  aciklama:"Asıl tehlike dağılım değil detonasyondur. Yangın veya kirlilik altında bozunarak patlamaya geçebilir.",
+  onlem:"Patlama sekmesinden aşırı basınç bölgelerini hesaplayın. Yangında müdahale mesafesi bu bölgelere göre belirlenir."},
+ CO2:{ad:"Karbon Dioksit",sembol:"CO<sub>2</sub>",duz:"CO₂",renk:"#1F5F9E",bekra:"—",
+  mol:44.01,kaynama:-78.5,yogunlukGaz:1.84,yogunlukSivi:770,hafif:false,
+  vaporB:{A:10.14,B:1353,C:264},
+  erpg:{e1:10000,e2:40000,e3:50000},idlh:40000,lfl:null,ufl:null,yaniciMi:false,model:"Yoğun gaz",
+  aciklama:"Üre ünitesi proses gazı. Toksik değil ama boğucudur; havadan ağır olduğu için çukur, kanal ve kapalı hacimlerde birikir.",
+  onlem:"Kapalı alan girişinde oksijen ölçümü zorunlu. Açık havadaki mesafeler kısa çıkar; asıl risk kapalı hacimdir."},
+ CH4:{ad:"Doğalgaz / Metan",sembol:"CH<sub>4</sub>",duz:"CH₄",renk:"#2D7A46",bekra:"F",
+  mol:16.04,kaynama:-161.5,yogunlukGaz:0.717,yogunlukSivi:422,hafif:true,
+  vaporB:{A:6.61,B:405,C:268},
+  erpg:{e1:5000,e2:33000,e3:50000},idlh:null,lfl:5,ufl:15,yaniciMi:true,model:"Gauss",
+  aciklama:"Ham madde hattı. Doğrudan toksik değildir; asıl tehlike alt patlama sınırı (LEL) bölgesinde tutuşmadır.",
+  onlem:"LEL bölgesindeki tüm ateşleme kaynakları devre dışı bırakılır. Taşınabilir LEL ölçer ile ilerlenir."}
+};
+
+let secKimyasal=null, kaynak={mod:"delik",Q:0}, sonHesap=null;
+
+/* ════ TEMA ════ */
+function temaDegistir(){
+  const h=document.documentElement;
+  const yeni=h.getAttribute("data-tema")==="koyu"?"acik":"koyu";
+  h.setAttribute("data-tema",yeni);
+  document.getElementById("temaBtn").textContent=yeni==="koyu"?"☀️":"🌙";
+  try{localStorage.setItem("khem_tema",yeni);}catch(e){}
+  if(typeof hCiz==="function") hCiz();
+}
+(function(){
+  let t="acik";
+  try{t=localStorage.getItem("khem_tema")||"acik";}catch(e){}
+  document.documentElement.setAttribute("data-tema",t);
+  document.addEventListener("DOMContentLoaded",()=>{
+    document.getElementById("temaBtn").textContent=t==="koyu"?"☀️":"🌙";
+  });
+})();
+
+/* ════ NAVİGASYON ════ */
+function sayfaGec(id){
+  document.querySelectorAll(".sayfa").forEach(s=>s.classList.remove("aktif"));
+  document.querySelectorAll("nav.sol button").forEach(b=>b.classList.remove("aktif"));
+  const s=document.getElementById("sayfa-"+id);
+  if(s)s.classList.add("aktif");
+  const b=document.getElementById("nb-"+id);
+  if(b)b.classList.add("aktif");
+  document.getElementById("icerik").scrollTop=0;
+  adimGoster();
+  if(id==="sonuc")sonucGoster();
+  if(id==="harita")setTimeout(hCiz,30);
+  if(id==="gecmis")gecmisListeYenile();
+  if(id==="senaryo")senaryoListeCiz();
+}
+function adimGoster(){
+  const ad=[
+    {k:"Kimyasal",ok:!!secKimyasal},
+    {k:"Kaynak",ok:kaynak.Q>0},
+    {k:"Atmosfer",ok:!!sonHesap},
+    {k:"Sonuç",ok:!!sonHesap}
+  ];
+  const html=ad.map(a=>`<span class="a ${a.ok?"ok":""}">${a.ok?"✓ ":""}${a.k}</span>`).join("<span>→</span>");
+  ["adimGost","adimGost2","adimGost3"].forEach(id=>{
+    const e=document.getElementById(id); if(e)e.innerHTML=html;
+  });
+}
+
+/* ════ KİMYASAL KARTLARI ════ */
+function kmGridYap(){
+  const g=document.getElementById("kmGrid"); g.innerHTML="";
+  for(const [k,v] of Object.entries(KDB)){
+    const d=document.createElement("div");
+    d.className="km"; d.id="km-"+k; d.style.setProperty("--kr",v.renk);
+    d.onclick=()=>kmSec(k);
+    d.innerHTML=`<div class="frm">${v.sembol}</div>
+      <div class="isim">${v.ad}</div>
+      <div class="mdl">${v.model==="Patlama"?"💥 Patlama modeli":"🌬 "+v.model}</div>
+      ${v.bekra!=="—"?`<span class="rz">BEKRA ${v.bekra}</span>`:""}`;
+    g.appendChild(d);
+  }
+}
+function kmSec(k){
+  secKimyasal=k;
+  document.querySelectorAll(".km").forEach(e=>e.classList.remove("secili"));
+  document.getElementById("km-"+k).classList.add("secili");
+  const v=KDB[k];
+  let sat="";
+  if(v.erpg)sat+=`<tr><td>ERPG-1 / 2 / 3</td><td class="sag"><b>${v.erpg.e1} / ${v.erpg.e2} / ${v.erpg.e3}</b> ppm</td></tr>`;
+  if(v.idlh)sat+=`<tr><td>IDLH</td><td class="sag">${v.idlh} ppm</td></tr>`;
+  if(v.lfl)sat+=`<tr><td>LFL / UFL</td><td class="sag">%${v.lfl} / %${v.ufl}</td></tr>`;
+  document.getElementById("kmBilgi").innerHTML=`
+   <h2 class="bol">Seçilen kimyasal</h2>
+   <div class="kart" style="border-color:${v.renk};border-left:5px solid ${v.renk}">
+    <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:8px">
+      <span style="font-size:22px;font-weight:800;color:${v.renk}">${v.sembol}</span>
+      <b style="font-size:15px">${v.ad}</b>
+      ${v.bekra!=="—"?`<span class="rz" style="position:static;background:${v.renk};color:#fff;border-color:${v.renk}">BEKRA ${v.bekra}</span>`:""}
+    </div>
+    <table class="t">
+      <tr><td>Mol kütlesi</td><td class="sag">${v.mol} g/mol</td></tr>
+      <tr><td>Kaynama noktası</td><td class="sag">${v.kaynama??"—"} °C</td></tr>
+      <tr><td>Gaz yoğunluğu</td><td class="sag">${v.yogunlukGaz??"—"} kg/m³ ${v.hafif!=null?(v.hafif?"(havadan hafif)":"(havadan ağır)"):""}</td></tr>
+      <tr><td>Dağılım modeli</td><td class="sag">${v.model}</td></tr>
+      ${sat}
+    </table>
+    <div style="margin-top:9px;font-size:12.5px">${v.aciklama}</div>
+    <div class="not kirmizi">⚠ ${v.onlem}</div>
+    ${v.model==="Patlama"
+      ?`<button class="btn btn-ana btn-blok" onclick="sayfaGec('patlama')">💥 Patlama modeline geç →</button>`
+      :`<button class="btn btn-ana btn-blok" onclick="sayfaGec('kaynak')">⚙️ Kaynak modeline geç →</button>`}
+   </div>`;
+  adimGoster();
+  nh3DepoGoster();
+}
+function nh3DepoGoster(){
+  const gos = secKimyasal==="NH3";
+  ["nh3DepoDiv","nh3DepoDiv2"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display=gos?"block":"none";
+  });
+  spFlashNot();
+}
+
+/* ════ KAYNAK MODELLERİ ════ */
+function kaynakTab(mod){
+  ["delik","tank","havuz","anlik"].forEach(m=>{
+    document.getElementById("ks-"+m).style.display=m===mod?"block":"none";
+    document.getElementById("kt-"+m).classList.toggle("ak",m===mod);
+  });
+  kaynak.mod=mod;
+}
+function kaynakHesapla(){
+  if(!secKimyasal){alert("Önce bir kimyasal seçin.");sayfaGec("kimyasal");return;}
+  const v=KDB[secKimyasal];
+  if(v.model==="Patlama"){sayfaGec("patlama");return;}
+  let Q=0;
+  if(kaynak.mod==="delik"){
+    const d=(parseFloat(document.getElementById("dCap").value)||0)/1000;
+    const P=((parseFloat(document.getElementById("dBasinc").value)||0)+1.013)*1e5;
+    const T=(parseFloat(document.getElementById("dSicaklik").value)||25)+273.15;
+    const g=v.mol<30?1.31:1.20, M=v.mol/1000, R=8.314, A=Math.PI*d*d/4, Cd=0.85;
+    const Pkr=P*Math.pow(2/(g+1),g/(g-1));
+    let tip;
+    if(Pkr>1.013e5){
+      Q=Cd*A*P*Math.sqrt(g*M/(R*T)*Math.pow(2/(g+1),(g+1)/(g-1)));
+      tip="Boğulmuş (kritik) akış";
+    }else{
+      const rho=P*M/(R*T);
+      Q=Cd*A*Math.sqrt(2*rho*Math.max(0,P-1.013e5));
+      tip="Kritik altı akış";
+    }
+    document.getElementById("dBilgi").innerHTML=`${tip} · Debi: <b>${Q.toFixed(3)} kg/s</b> (${(Q*3600).toFixed(0)} kg/saat)`;
+  }else if(kaynak.mod==="tank"){
+    const d=(parseFloat(document.getElementById("tCap").value)||0)/1000;
+    const h0=parseFloat(document.getElementById("tSeviye").value)||0;
+    const At=parseFloat(document.getElementById("tAlan").value)||1;
+    const rho=parseFloat(document.getElementById("tYog").value)||1000;
+    const Ad=Math.PI*d*d/4, Cd=0.61;
+    let h=h0, top=0, n=0;
+    for(let t=0;t<600;t+=10){
+      const q=Cd*Ad*Math.sqrt(2*9.81*Math.max(h,0))*rho;
+      top+=q; n++;
+      h-=q/(rho*At)*10;
+      if(h<=0)break;
+    }
+    Q=n?top/n:0;
+    const Q0=Cd*Ad*Math.sqrt(2*9.81*h0)*rho;
+    document.getElementById("tBilgi").innerHTML=`Başlangıç debisi <b>${Q0.toFixed(2)} kg/s</b> → ilk 10 dakika ortalaması <b>${Q.toFixed(2)} kg/s</b>`;
+  }else if(kaynak.mod==="havuz"){
+    const Al=parseFloat(document.getElementById("hAlan").value)||0;
+    const Tc=parseFloat(document.getElementById("hSicak").value)||25;
+    const u=parseFloat(document.getElementById("hRuzgar").value)||1;
+    const ab=v.vaporB;
+    const Pv=Math.pow(10,ab.A-ab.B/(ab.C+Tc))*1e5;
+    const E=6.6e-4*Math.pow(u,0.78)*(v.mol/1000)*Pv/(8.314*(Tc+273.15));
+    Q=E*Al;
+    document.getElementById("hBilgi").innerHTML=`Buhar basıncı ${(Pv/1000).toFixed(1)} kPa · yüzey akısı ${(E*1000).toFixed(2)} g/s·m² · toplam <b>${Q.toFixed(3)} kg/s</b>`;
+  }else{
+    Q=parseFloat(document.getElementById("aKutle").value)||0;
+  }
+  if(Q<=0){alert("Debi sıfır çıktı — girdileri kontrol edin.");return;}
+  kaynak.Q=Q;
+  adimGoster();
+  sayfaGec("atmosfer");
+}
+
+/* ════ DAĞILIM MODELLERİ ════ */
+function sigmalar(s,x){
+  const f=1/Math.sqrt(1+1e-4*x);
+  switch(s){
+    case"A":return[0.22*x*f,0.20*x];
+    case"B":return[0.16*x*f,0.12*x];
+    case"C":return[0.11*x*f,0.08*x/Math.sqrt(1+2e-4*x)];
+    case"D":return[0.08*x*f,0.06*x/Math.sqrt(1+1.5e-3*x)];
+    case"E":return[0.06*x*f,0.03*x/(1+3e-4*x)];
+    default:return[0.04*x*f,0.016*x/(1+3e-4*x)];
+  }
+}
+function gaussC(Q,u,s,x){const[sy,sz]=sigmalar(s,x);return Q*1e6/(Math.PI*sy*sz*u);}
+function yogunGazC(Q,u,s,x,yog){
+  const Qv=Q/yog, LD=Math.sqrt(Math.max(1e-10,Qv/u));
+  const xS=Math.max(1e-6,x/LD);
+  return yog*Math.min(1,0.091*Math.pow(xS,-0.88))*1e6;
+}
+function puffC(Qt,u,s,x){
+  const[sy,sz]=sigmalar(s,x);
+  return Qt*1e6/(Math.pow(2*Math.PI,1.5)*sy*sy*sz);
+}
+function esikMesafe(Q,u,s,yog,hafif,anlik,esikMg){
+  const C=x=>anlik?puffC(Q,u,s,x):(hafif?gaussC(Q,u,s,x):yogunGazC(Q,u,s,x,yog));
+  if(C(1)<esikMg)return 0;
+  let lo=1,hi=10000;
+  if(C(hi)>esikMg)return hi;
+  for(let i=0;i<80;i++){const m=(lo+hi)/2;C(m)>esikMg?lo=m:hi=m;}
+  return lo;
+}
+const ppmToMg=(ppm,mol)=>ppm*mol/24.45;
+const mYaz=v=>{
+  if(v<=0)return"kaynak yakını";
+  if(v>=10000)return"> 100 km";
+  if(v>=1000)return(v/1000).toFixed(1)+" km";
+  return Math.round(v)+" m";
+};
+
+function dagilimHesapla(){
+  if(!secKimyasal){alert("Önce bir kimyasal seçin.");sayfaGec("kimyasal");return;}
+  const v=KDB[secKimyasal];
+  if(v.model==="Patlama"){sayfaGec("patlama");return;}
+  if(!kaynak.Q){alert("Önce kaynak debisini hesaplayın.");sayfaGec("kaynak");return;}
+  const u=parseFloat(document.getElementById("aRuz").value)||3;
+  const s=document.getElementById("aSinif").value;
+  const anlik=kaynak.mod==="anlik", Q=kaynak.Q;
+
+  // NH₃ basınçlı sıvı → flaş buharlaşma + B-M ağır gaz
+  let hafif=v.hafif??true, yog=v.yogunlukGaz??1.0;
+  let Q_hesap=Q, flashFrac=null, flashRho=null;
+  if(secKimyasal==="NH3"&&!anlik){
+    const T_id=kaynak.mod==="tank"?"nh3DepoT2":"nh3DepoT";
+    const T_depo=parseFloat(document.getElementById(T_id)?.value)||25;
+    flashFrac=nh3FlashFrac(T_depo);
+    flashRho=nh3BulutYog(flashFrac);
+    Q_hesap=Q*nh3FAirborne(T_depo);
+    hafif=false; yog=flashRho;
+  }
+
+  const hes=[];
+  if(v.erpg){
+    const es=[
+      {ad:"ERPG-3",ppm:v.erpg.e3,renk:"#C1121F",tanim:"Yaşamı tehdit eden etki — derhal tahliye"},
+      {ad:"ERPG-2",ppm:v.erpg.e2,renk:"#E85D04",tanim:"Geri dönüşsüz etki eşiği — müdahale sınırı"},
+      {ad:"ERPG-1",ppm:v.erpg.e1,renk:"#B37F00",tanim:"Hafif geçici rahatsızlık — uyarı bölgesi"}
+    ];
+    for(const e of es){
+      const mg=ppmToMg(e.ppm,v.mol);
+      hes.push({...e,mg,mesafe:esikMesafe(Q_hesap,u,s,yog,hafif,anlik,mg)});
+    }
+  }
+  let lelM=null;
+  if(v.yaniciMi&&v.lfl){
+    lelM=esikMesafe(Q_hesap,u,s,yog,hafif,anlik,ppmToMg(v.lfl*10000,v.mol));
+  }
+  sonHesap={
+    kimyasal:secKimyasal,Q:Q_hesap,Qham:Q,u,sinif:s,hafif,yog,anlik,
+    hesaplar:hes,lelMesafe:lelM,yonKaynak:parseFloat(document.getElementById("aYon").value)||0,
+    yonDeg:((parseFloat(document.getElementById("aYon").value)||0)+180)%360,
+    flashFrac,flashRho
+  };
+  adimGoster();
+  senaryoKaydet();
+  spSonucGuncelle();
+  spFlashNot();
+  sayfaGec("sonuc");
+}
+
+
+function sonucGoster(){
+  const el=document.getElementById("sonucIc");
+  if(!sonHesap){
+    el.innerHTML=`<div class="not">Henüz hesaplama yapılmadı. Kimyasal → Kaynak → Atmosfer adımlarını tamamlayın.</div>
+      <button class="btn btn-ana btn-blok" onclick="sayfaGec('kimyasal')">Kimyasal seçimine git</button>`;
+    return;
+  }
+  const v=KDB[sonHesap.kimyasal];
+  let h=`<h2 class="bol">Senaryo özeti</h2>
+  <div class="kart" style="border-left:5px solid ${v.renk}">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:7px">
+      <span style="font-size:20px;font-weight:800;color:${v.renk}">${v.sembol}</span>
+      <b>${v.ad}</b>
+    </div>
+    <table class="t">
+      <tr><td>Salım</td><td class="sag"><b>${sonHesap.anlik?sonHesap.Q+" kg (anlık)":sonHesap.Q.toFixed(3)+" kg/s"}</b></td></tr>
+      <tr><td>Rüzgâr</td><td class="sag">${sonHesap.u} m/s · ${sonHesap.yonKaynak}° yönünden</td></tr>
+      <tr><td>Kararlılık</td><td class="sag">Sınıf ${sonHesap.sinif}</td></tr>
+      <tr><td>Model</td><td class="sag">${sonHesap.hafif?"Gauss (hafif gaz)":"Britter-McQuaid (ağır gaz)"}</td></tr>
+    </table>
+  </div>
+  <h2 class="bol">Tehlike mesafeleri — rüzgâr altı</h2>`;
+  for(const e of sonHesap.hesaplar){
+    h+=`<div class="bant" style="--bk:${e.renk}">
+      <div class="st"><span class="msf">${mYaz(e.mesafe)}</span><span class="etk">${e.ad} · ${e.ppm} ppm</span></div>
+      <div class="ac">${e.tanim}</div>
+    </div>`;
+  }
+  if(sonHesap.lelMesafe!=null){
+    h+=`<div class="bant" style="--bk:#2D7A46">
+      <div class="st"><span class="msf">${mYaz(sonHesap.lelMesafe)}</span><span class="etk">LEL · %${v.lfl}</span></div>
+      <div class="ac">Alt patlama sınırı — bu bölgede tutuşma riski vardır</div>
+    </div>`;
+  }
+  const e3=sonHesap.hesaplar[0], e2=sonHesap.hesaplar[1];
+  h+=`<h2 class="bol">Acil durum notları</h2>
+  <div class="kart">
+    <table class="t">
+      <tr><td>Derhal tahliye yarıçapı</td><td class="sag"><b style="color:#C1121F">${mYaz(e3?.mesafe)}</b></td></tr>
+      <tr><td>Müdahale sınırı</td><td class="sag"><b style="color:#E85D04">${mYaz(e2?.mesafe)}</b></td></tr>
+      <tr><td>Kaçınılacak yön</td><td class="sag">${sonHesap.yonKaynak}° yönünün rüzgâr altı</td></tr>
+      <tr><td>Tahliye koridoru</td><td class="sag">Rüzgâra dik yönde</td></tr>
+    </table>
+    <div class="not kirmizi">${v.onlem}</div>
+  </div>
+  <div class="btn-sira">
+    <button class="btn btn-ana" onclick="plumeKaynakSec()">🗺 Haritada göster</button>
+    <button class="btn btn-ik" onclick="rapOlustur()">📄 Rapor</button>
+  </div>
+  <div class="not">Bu sonuçlar tarama amaçlıdır. Basınçlı sıvı salımlarında aerosol etkisiyle gerçek mesafeler daha uzun olabilir.</div>`;
+  el.innerHTML=h;
+  spSonucGuncelle(); // sağ paneli de güncelle
+}
+
+/* ════ PATLAMA ════ */
+function patlamaHesapla(){
+  const W=parseFloat(document.getElementById("pKutle").value)||0;
+  const n=parseFloat(document.getElementById("pVerim").value)||0.08;
+  const oran=parseFloat(document.getElementById("pEnerji").value)||0.354;
+  const Wt=W*n*oran;
+  if(Wt<=0){alert("Geçerli bir miktar girin.");return;}
+  const bol=[
+    {p:70,Z:1.9,renk:"#7C0A0A",ac:"Yapıların tamamen yıkılması"},
+    {p:33,Z:2.8,renk:"#C1121F",ac:"Ağır yapısal hasar, yüksek ölüm oranı"},
+    {p:17,Z:4.5,renk:"#E85D04",ac:"Ciddi yapısal hasar, kulak zarı yaralanmaları"},
+    {p:7, Z:7.0,renk:"#B37F00",ac:"Orta hasar, duvar çatlakları"},
+    {p:3, Z:11.0,renk:"#1F5F9E",ac:"Pencerelerin çoğunun kırılması"},
+    {p:1, Z:26.0,renk:"#2D7A46",ac:"Cam kırılması, hafif hasar"}
+  ];
+  const kok=Math.cbrt(Wt);
+  let h=`<h2 class="bol">Aşırı basınç bölgeleri</h2>`;
+  for(const b of bol){
+    const R=b.Z*kok;
+    h+=`<div class="halka" style="--bk:${b.renk}">
+      <div class="yc">${R<1000?Math.round(R)+" m":(R/1000).toFixed(2)+" km"}</div>
+      <div class="tn"><b>${b.p} kPa</b>${b.ac}</div>
+    </div>`;
+  }
+  h+=`<div class="kart"><table class="t">
+    <tr><td>NH₄NO₃ miktarı</td><td class="sag">${W.toLocaleString("tr-TR")} kg</td></tr>
+    <tr><td>Dönüşüm verimi</td><td class="sag">%${(n*100).toFixed(0)}</td></tr>
+    <tr><td>TNT eşdeğeri</td><td class="sag"><b>${Wt.toFixed(0)} kg</b></td></tr>
+  </table>
+  <div class="not kirmizi">Yangın durumunda müdahale mesafesi 33 kPa halkasının (${(2.8*kok).toFixed(0)} m) dışında tutulmalıdır. Amonyum nitrat yangınına su ile müdahale edilir; yangın stoka ulaştıysa müdahale bırakılıp tahliyeye geçilir.</div></div>`;
+  document.getElementById("patSonuc").innerHTML=h;
+}
+
+/* ════ İGSAŞ HAZIR SENARYO ŞABLONLARI ════ */
+const IGSAS_SENARYOLAR=[
+ {id:"pril",ad:"Pril Kulesi — AN Bozunması",ac:"Amonyum nitrat patlama senaryosu",renk:"#C1121F",
+  kimyasal:"NH4NO3",kaynak:{mod:"anlik",aKutle:20000},not:"BEKRA Kategori E — derhal tahliye bölgeleri kritik."},
+ {id:"nh3-hat",ad:"Sentez — NH₃ Hattı Yırtılması",ac:"Basınçlı sıvı amonyak flaş + ağır gaz bulutu",renk:"#E85D04",
+  kimyasal:"NH3",kaynak:{mod:"delik",dCap:50,dBasinc:18,dSicaklik:30,nh3DepoT:25},
+  atmosfer:{aRuz:3,aYon:270,aSinif:"D"},not:"Flaş buharlaşma ve aerosol modeli uygulanacak."},
+ {id:"hno3-tank",ad:"Nitrik Asit Tank Saha Flanşı",ac:"Flanş kaçağından nitrik asit buharı + NO₂",renk:"#8B1A1A",
+  kimyasal:"HNO3",kaynak:{mod:"delik",dCap:8,dBasinc:4,dSicaklik:30},
+  atmosfer:{aRuz:2.5,aYon:270,aSinif:"F"},not:"Ağır gaz — zemin seviyesinde birikir, çukurlara dikkat."},
+ {id:"ure-co2",ad:"Üre — CO₂ Proses Hattı",ac:"Ağır boğucu gaz salımı",renk:"#1F5F9E",
+  kimyasal:"CO2",kaynak:{mod:"delik",dCap:20,dBasinc:6,dSicaklik:40},
+  atmosfer:{aRuz:2,aYon:270,aSinif:"F"},not:"Kapalı hacim riski — açık alan mesafeleri kısa."},
+ {id:"dogalgaz",ad:"Ham Madde — Doğalgaz Hattı",ac:"Yanıcı gaz — LEL bölgesi analizi",renk:"#2D7A46",
+  kimyasal:"CH4",kaynak:{mod:"delik",dCap:15,dBasinc:10,dSicaklik:20},
+  atmosfer:{aRuz:4,aYon:270,aSinif:"D"},not:"Ateşleme önleme — LEL bölgesi kritik."}
+];
+function senaryoListeCiz(){
+  const el=document.getElementById("senaryoListe");
+  if(!el)return;
+  el.innerHTML=IGSAS_SENARYOLAR.map(s=>`
+    <div style="display:flex;align-items:center;gap:11px;background:var(--panel);border:1px solid var(--cizgi);border-left:5px solid ${s.renk};border-radius:var(--r);padding:13px;margin-bottom:9px;cursor:pointer;box-shadow:var(--golge)" onclick="senaryoYukleSablon('${s.id}')">
+      <div style="width:42px;height:42px;border-radius:9px;background:${s.renk}22;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:${s.renk}">${KDB[s.kimyasal].duz}</div>
+      <div style="flex:1">
+        <b style="font-size:14px">${s.ad}</b>
+        <div style="font-size:12px;color:var(--soluk);margin-top:2px">${s.ac}</div>
+        <div style="font-size:11px;color:var(--soluk);margin-top:4px">${s.not}</div>
+      </div>
+      <span style="font-size:20px;color:var(--soluk)">›</span>
+    </div>`).join("");
+}
+function senaryoYukleSablon(idStr){
+  const s=IGSAS_SENARYOLAR.find(x=>x.id===idStr);
+  if(!s)return;
+  secKimyasal=s.kimyasal;
+  kmSec(s.kimyasal);
+  kaynakTab(s.kaynak.mod);
+  kaynak.mod=s.kaynak.mod;
+  Object.entries(s.kaynak).forEach(([k,v])=>{
+    if(k==="mod")return;
+    const el=document.getElementById(k);
+    if(el)el.value=v;
+  });
+  nh3DepoGoster();
+  if(s.atmosfer){
+    Object.entries(s.atmosfer).forEach(([k,v])=>{
+      const el=document.getElementById(k);
+      if(el)el.value=v;
+    });
+  }
+  sayfaGec("kaynak");
+  alert("Senaryo yüklendi: "+s.ad+"\n\nKaynak Hesapla → Atmosfer → Dağılımı Hesapla adımlarını izleyin.");
+}
+
+/* ════ SENARYO GEÇMİŞİ ════ */
+const MAKS_GECMIS = 10;
+
+function senaryoKaydet() {
+  if (!sonHesap) return;
+  const v = KDB[sonHesap.kimyasal];
+  const kayit = {
+    id: Date.now(),
+    tarih: new Date().toLocaleString("tr-TR", {
+      day: "2-digit", month: "short", year: "numeric",
+      hour: "2-digit", minute: "2-digit"
+    }),
+    kimyasal: sonHesap.kimyasal,
+    kimyasalAd: v.ad,
+    kimyasalRenk: v.renk,
+    kaynakMod: kaynak.mod,
+    Q: sonHesap.Q,
+    u: sonHesap.u,
+    sinif: sonHesap.sinif,
+    yonKaynak: sonHesap.yonKaynak,
+    anlik: sonHesap.anlik,
+    hafif: sonHesap.hafif,
+    yog: sonHesap.yog,
+    hesaplar: sonHesap.hesaplar,
+    lelMesafe: sonHesap.lelMesafe,
+    yonDeg: sonHesap.yonDeg,
+    // kaynak form değerleri — yeniden yüklemek için
+    form: {
+      dCap: document.getElementById("dCap")?.value,
+      dBasinc: document.getElementById("dBasinc")?.value,
+      dSicaklik: document.getElementById("dSicaklik")?.value,
+      aRuz: document.getElementById("aRuz")?.value,
+      aYon: document.getElementById("aYon")?.value,
+      aSinif: document.getElementById("aSinif")?.value,
+    }
+  };
+  try {
+    const liste = JSON.parse(localStorage.getItem("khem_gecmis") || "[]");
+    liste.unshift(kayit);
+    if (liste.length > MAKS_GECMIS) liste.length = MAKS_GECMIS;
+    localStorage.setItem("khem_gecmis", JSON.stringify(liste));
+  } catch(e) {}
+}
+
+function senaryoYukle(id) {
+  try {
+    const liste = JSON.parse(localStorage.getItem("khem_gecmis") || "[]");
+    const k = liste.find(x => x.id === id);
+    if (!k) return;
+    // Kimyasal seç
+    secKimyasal = k.kimyasal;
+    kmSec(k.kimyasal);
+    // Kaynak modunu geri yükle
+    kaynak.mod = k.kaynakMod;
+    kaynak.Q = k.Q;
+    // Form değerlerini geri yükle
+    if (k.form) {
+      Object.entries(k.form).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el && val !== undefined) el.value = val;
+      });
+    }
+    // sonHesap'ı doğrudan yükle
+    sonHesap = {
+      kimyasal: k.kimyasal, Q: k.Q, u: k.u, sinif: k.sinif,
+      yonKaynak: k.yonKaynak, anlik: k.anlik, hafif: k.hafif,
+      yog: k.yog, hesaplar: k.hesaplar, lelMesafe: k.lelMesafe, yonDeg: k.yonDeg
+    };
+    adimGoster();
+    sayfaGec("sonuc");
+  } catch(e) { alert("Senaryo yüklenemedi."); }
+}
+
+function senaryoSil(id, e) {
+  e.stopPropagation();
+  try {
+    let liste = JSON.parse(localStorage.getItem("khem_gecmis") || "[]");
+    liste = liste.filter(x => x.id !== id);
+    localStorage.setItem("khem_gecmis", JSON.stringify(liste));
+    gecmisListeYenile();
+  } catch(err) {}
+}
+
+function gecmisListeYenile() {
+  const kap = document.getElementById("gecmisListesi");
+  if (!kap) return;
+  let liste = [];
+  try { liste = JSON.parse(localStorage.getItem("khem_gecmis") || "[]"); } catch(e) {}
+  if (!liste.length) {
+    kap.innerHTML = '<div class="gecmis-bos">📭 Henüz kaydedilmiş senaryo yok.<br>Bir hesaplama yapınca buraya otomatik eklenir.</div>';
+    return;
+  }
+  kap.innerHTML = liste.map(k => {
+    const e3 = k.hesaplar?.find(h => h.ad === "ERPG-3");
+    const e2 = k.hesaplar?.find(h => h.ad === "ERPG-2");
+    const ozet = e3 && e2
+      ? `ERPG-3: ${mYaz(e3.mesafe)} · ERPG-2: ${mYaz(e2.mesafe)}`
+      : "Sonuç mevcut";
+    const kaynakAd = {delik:"Boru deliği",tank:"Tank",havuz:"Havuz",anlik:"Anlık"}[k.kaynakMod] || k.kaynakMod;
+    return `<div class="sn-kart" onclick="senaryoYukle(${k.id})">
+      <div class="sn-ren" style="background:${k.kimyasalRenk}"></div>
+      <div class="sn-ic">
+        <div class="sn-ad">${k.kimyasalAd} · ${kaynakAd} · ${k.u} m/s ${k.sinif}</div>
+        <div class="sn-alt">${ozet}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="sn-ms">${k.tarih}</div>
+        <button class="sn-sil" onclick="senaryoSil(${k.id},event)" title="Sil">🗑</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+/* ════ KULLANILAN FORMÜLLER ════ */
+function formulBilgisi(sonHesap) {
+  if (!sonHesap) return "";
+  const v = KDB[sonHesap.kimyasal];
+  const model = sonHesap.hafif
+    ? "Pasquill-Gifford Gauss sürekli salım plume modeli"
+    : "Britter-McQuaid (1980) yoğun gaz sürekli salım korelasyonu";
+  const denklem = sonHesap.hafif
+    ? "C(x) = Q / (π · σ<sub>y</sub> · σ<sub>z</sub> · u)"
+    : "c/c₀ = 0,091 · (x/L<sub>D</sub>)<sup>−0,88</sup>, &nbsp; L<sub>D</sub> = √(Q<sub>v</sub>/u)";
+  const kaynak_ref = sonHesap.hafif
+    ? "Turner (1970), Seinfeld &amp; Pandis"
+    : "Britter &amp; McQuaid, J. Hazardous Materials, 1980";
+  const sinif_ref = {
+    A:"güneşli, rüzgâr &lt;2 m/s",B:"güneşli/az bulutlu",
+    C:"az bulutlu",D:"nötr (genel gündüz)",
+    E:"gece, hafif bulut",F:"sakin gece, açık gökyüzü"
+  }[sonHesap.sinif] || "";
+  return `<h2 class="r-bol"><span>★</span>Kullanılan Model ve Formüller</h2>
+  <div class="r-bilgi kesme">
+    <div><span class="e">Dağılım modeli</span><span class="d">${model}</span></div>
+    <div><span class="e">Kaynak</span><span class="d">${kaynak_ref}</span></div>
+    <div><span class="e">Temel denklem</span><span class="d" style="font-size:8pt">${denklem}</span></div>
+    <div><span class="e">P-G Sınıf ${sonHesap.sinif} — atmosfer</span><span class="d">${sinif_ref}</span></div>
+    <div><span class="e">ERPG değerleri</span><span class="d">AIHA Emergency Response Planning Guidelines, ${v.ad}</span></div>
+    <div><span class="e">Sınırlamalar</span><span class="d" style="font-size:7.5pt">Düz arazi, zemin seviyesi kaynak, sürekli salım varsayılmıştır. Basınçlı sıvı salımlarında aerosol etkisiyle gerçek mesafeler uzun olabilir.</span></div>
+  </div>`;
+}
+
+/* ════ RAPOR ════ */
+function raporNo(){
+  const d=new Date(), p=n=>String(n).padStart(2,"0");
+  return `KHEM-${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}`;
+}
+function haritaGoruntusu(){
+  if(!plume||!hImg)return null;
+  try{
+    const yedek={...zSt};
+    zoomSifirla();
+    const veri=hKanvas.toDataURL("image/jpeg",0.86);
+    zSt=yedek;hCiz();
+    return veri;
+  }catch(e){return null;}
+}
+const MUDAHALE_KARAR={
+  "ERPG-3":"Derhal tahliye — yaşamı tehdit eden etki",
+  "ERPG-2":"Müdahale ekibi sınırı — geri dönüşsüz etki eşiği",
+  "ERPG-1":"Uyarı bölgesi — hafif ve geçici rahatsızlık",
+  "LEL":"Ateşleme kaynakları devre dışı — tutuşma riski"
+};
+function rapOlustur(){
+  if(!sonHesap){alert("Önce bir dağılım hesabı yapın.");sayfaGec("kimyasal");return;}
+  const v=KDB[sonHesap.kimyasal];
+  const no=raporNo();
+  const tarih=new Date().toLocaleDateString("tr-TR",{day:"2-digit",month:"long",year:"numeric"});
+  const saat=new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
+  const kaynakAd={delik:"Boru / flanş deliği",tank:"Tank kaçağı",havuz:"Havuz buharlaşması",anlik:"Anlık salım"}[kaynak.mod]||kaynak.mod;
+  const sinifAd={A:"A — çok kararsız",B:"B — kararsız",C:"C — az kararsız",
+                 D:"D — nötr",E:"E — az kararlı",F:"F — kararlı"}[sonHesap.sinif];
+
+  const zonlar=sonHesap.hesaplar.filter(e=>e.mesafe>0).map(e=>({...e}));
+  if(sonHesap.lelMesafe>0)
+    zonlar.push({ad:"LEL",ppm:v.lfl*10000,renk:"#2D7A46",mesafe:sonHesap.lelMesafe});
+  const enUzak=Math.max(...zonlar.map(e=>e.mesafe),1);
+
+  /* TEK BİRLEŞİK TABLO: eşik + konsantrasyon + mesafe (mini çubuk) + müdahale kararı */
+  const satirlar=zonlar.map(e=>{
+    const g=Math.max(6,Math.round(e.mesafe/enUzak*100));
+    return `<tr style="--zk:${e.renk}">
+      <td class="esik">${e.ad}</td>
+      <td class="sag">${e.ppm.toLocaleString("tr-TR")} ppm</td>
+      <td><div class="r-mb"><span class="cb"><i style="width:${g}%"></i></span><span class="ms">${mYaz(e.mesafe)}</span></div></td>
+      <td>${MUDAHALE_KARAR[e.ad]||""}</td>
+    </tr>`;
+  }).join("");
+
+  const salim=sonHesap.anlik
+    ? sonHesap.Q.toLocaleString("tr-TR")+" kg (anlık)"
+    : sonHesap.Q.toFixed(3)+" kg/s";
+
+  const hGor=haritaGoruntusu();
+  const haritaBolum=hGor?`
+    <div class="kesme">
+    <h2 class="r-bol"><span>3</span>Tesis Üzerinde Etki Alanı</h2>
+    <img class="r-harita" src="${hGor}">
+    <div class="r-hnot">Salım noktası ve tehlike bölgeleri · ölçek 1 piksel ≈ ${hVeri.olcek.toFixed(2)} m · rüzgâr ${sonHesap.yonKaynak}° yönünden</div></div>`:"";
+  const nKim=hGor?4:3;
+
+  document.getElementById("rapAlan").innerHTML=`
+  <div class="r-ust">
+    <div class="r-logo">⚗</div>
+    <div class="r-mrk"><div class="a">İGSAŞ</div><div class="b">KHEM</div></div>
+    <div class="sag"><b>${no}</b><br>${tarih} · ${saat}<br>Körfez / Kocaeli</div>
+  </div>
+
+  <div class="r-baslik">Kimyasal Yayılım Etki Değerlendirme Raporu</div>
+  <div class="r-altbaslik">Kimyasal Tehlike ve Etki Modeli · ${sonHesap.hafif?"Gauss":"Britter-McQuaid"} dağılım analizi</div>
+
+  <div class="r-uyari"><b>Tarama amaçlıdır.</b> Acil durum kararları saha koşulları değerlendirilerek yetkili personel tarafından verilir. Basınçlı sıvı salımlarında aerosol etkisiyle gerçek mesafeler hesaplanandan uzun olabilir.</div>
+
+  <h2 class="r-bol"><span>1</span>Senaryo Tanımı</h2>
+  <div class="r-kim kesme" style="--kk:${v.renk}">
+    <div class="frm">${v.duz}</div>
+    <div><div class="ad">${v.ad}</div><div class="md">${v.model} dağılım modeli · ${sonHesap.hafif?"havadan hafif":"havadan ağır"}</div></div>
+    ${v.bekra!=="—"?`<div class="rz">BEKRA ${v.bekra}</div>`:""}
+  </div>
+  <div class="r-bilgi kesme">
+    <div><span class="e">Kaynak modeli</span><span class="d">${kaynakAd}</span></div>
+    <div><span class="e">Salım miktarı</span><span class="d">${salim}</span></div>
+    <div><span class="e">Rüzgâr</span><span class="d">${sonHesap.u} m/s · ${sonHesap.yonKaynak}° yönünden</span></div>
+    <div><span class="e">Atmosferik kararlılık</span><span class="d">${sinifAd}</span></div>
+  </div>
+
+  <h2 class="r-bol"><span>2</span>Tehlike Mesafeleri ve Müdahale Kararları</h2>
+  <table class="r-t kesme">
+    <tr><th style="width:14%">Eşik</th><th style="width:17%;text-align:right">Konsantrasyon</th>
+        <th style="width:27%">Rüzgâr altı mesafe</th><th>Müdahale kararı</th></tr>
+    ${satirlar}
+    <tr><td class="esik" style="--zk:#5B6875">Yön</td><td class="sag">—</td>
+        <td colspan="2">Kaçınılacak bölge: <b>${sonHesap.yonKaynak}° yönünün rüzgâr altı</b> · tahliye koridoru rüzgâr eksenine dik yönde</td></tr>
+  </table>
+  <div class="r-mudahale kesme"><b>${v.ad} — kimyasala özel not</b>${v.onlem}</div>
+  ${haritaBolum}
+
+  ${formulBilgisi(sonHesap)}
+  <h2 class="r-bol"><span>${nKim}</span>Kimyasal Özellikleri</h2>
+  <div class="r-bilgi kesme">
+    <div><span class="e">Mol kütlesi</span><span class="d">${v.mol} g/mol</span></div>
+    <div><span class="e">Kaynama noktası</span><span class="d">${v.kaynama??"—"} °C</span></div>
+    <div><span class="e">Gaz yoğunluğu</span><span class="d">${v.yogunlukGaz??"—"} kg/m³ (hava 1,225)</span></div>
+    <div><span class="e">IDLH</span><span class="d">${v.idlh?v.idlh+" ppm":"—"}</span></div>
+    <div><span class="e">Patlama sınırları</span><span class="d">${v.lfl?"%"+v.lfl+" – %"+v.ufl:"Yanıcı değil"}</span></div>
+    <div><span class="e">ERPG-1 / 2 / 3</span><span class="d">${v.erpg?v.erpg.e1+" / "+v.erpg.e2+" / "+v.erpg.e3+" ppm":"—"}</span></div>
+  </div>
+  <div style="font-size:8.6pt;margin-top:5px;color:#3A4753">${v.aciklama}</div>
+
+  <div class="r-imz kesme">
+    <div>Hazırlayan<span>Ad Soyad / İmza / Tarih</span></div>
+    <div>Proses Güvenliği<span>Ad Soyad / İmza / Tarih</span></div>
+    <div>Acil Müdahale<span>Ad Soyad / İmza / Tarih</span></div>
+  </div>
+
+  <div class="r-alt"><span>İGSAŞ Körfez · Kimyasal Tehlike ve Etki Modeli</span><span>${no}</span></div>`;
+
+  setTimeout(()=>window.print(),120);
+}
+</script>
+<script>
+/* ════ HARİTA + ZOOM/PAN + PLUME ════ */
+/* ════ İGSAŞ TESİS SABİT NOKTALARI (POI) + KESİŞİM KONTROLÜ ════ */
+const IGSAS_POI=[
+  {id:"pril",ad:"Pril Kulesi",ac:"AN depolama",x:0.154,y:0.218,tip:"kritik"},
+  {id:"nh3-kure",ad:"NH₃ Küreleri",ac:"Sıvı amonyak depolama",x:0.327,y:0.261,tip:"kaynak"},
+  {id:"hno3-tank",ad:"Nitrik Asit Tank Sahası",ac:"Derişik asit depolama",x:0.489,y:0.336,tip:"kaynak"},
+  {id:"ure",ad:"Üre Ünitesi",ac:"Proses / CO₂ hattı",x:0.631,y:0.241,tip:"kaynak"},
+  {id:"sentez",ad:"Sentez Ünitesi",ac:"NH₃ hattı",x:0.414,y:0.318,tip:"kaynak"},
+  {id:"topla-A",ad:"Toplanma Alanı A",ac:"Kuzey acil toplanma",x:0.452,y:0.123,tip:"toplanma"},
+  {id:"topla-B",ad:"Toplanma Alanı B",ac:"Doğu acil toplanma",x:0.745,y:0.402,tip:"toplanma"},
+  {id:"topla-C",ad:"Toplanma Alanı C",ac:"Batı acil toplanma",x:0.126,y:0.384,tip:"toplanma"}
+];
+/* NOT: Koordinatlar normalize (0-1). Gerçek hava fotoğrafına göre güncelle. */
+function toplanmaKesisimKontrol(){
+  if(!plume||!hVeri?.olcek)return[];
+  const sonuc=[];
+  const toplanan=IGSAS_POI.filter(p=>p.tip==="toplanma");
+  for(const t of toplanan){
+    for(const e of plume.profiller){
+      const dx=(t.x-plume.x)*hImg.width*(1/hVeri.olcek);
+      const dy=(t.y-plume.y)*hImg.height*(1/hVeri.olcek);
+      const mesafe=Math.hypot(dx,dy);
+      const radyan=plume.yonDeg*Math.PI/180;
+      const ekseneUzaklik=Math.abs(dx*Math.sin(radyan)-dy*Math.cos(radyan));
+      const[,sy]=sigmalar(sonHesap.sinif,mesafe);
+      const cariGenislik=Math.max(20,sy*3);
+      if(mesafe<=e.mesafe&&ekseneUzaklik<=cariGenislik){
+        sonuc.push({poi:t,esik:e.ad,mesafe});
+      }
+    }
+  }
+  return sonuc;
+}
+
+const IGSAS_MAP="data:image/jpeg;base64,[base64 data stripped]";
+
+let hVeri=null,hImg=null,hMod="yok",calibPt=[],plume=null;
+let zSt={s:1,tx:0,ty:0};
+let drag={on:false,moved:false,lx:0,ly:0};
+let ptch={on:false,d0:0,tx0:0,ty0:0,s0:1,mx:0,my:0};
+
+const hKanvas=document.getElementById("hKanvas");
+const hKtx=hKanvas.getContext("2d");
+
+function koyuMu(){return document.documentElement.getAttribute("data-tema")==="koyu";}
+
+/* ── zoom / pan ── */
+function clampZ(){
+  if(!hImg)return;
+  const minS=Math.min(hKanvas.width/hImg.width,hKanvas.height/hImg.height)*0.85;
+  zSt.s=Math.max(minS,Math.min(25,zSt.s));
+  const IW=hImg.width*zSt.s,IH=hImg.height*zSt.s;
+  zSt.tx=Math.max(hKanvas.width*0.08-IW,Math.min(hKanvas.width*0.92,zSt.tx));
+  zSt.ty=Math.max(hKanvas.height*0.08-IH,Math.min(hKanvas.height*0.92,zSt.ty));
+}
+function zAround(cx,cy,f){zSt.tx=cx-(cx-zSt.tx)*f;zSt.ty=cy-(cy-zSt.ty)*f;zSt.s*=f;clampZ();hCiz();}
+function zoomAdim(f){zAround(hKanvas.width/2,hKanvas.height/2,f);}
+function zoomSifirla(){
+  if(!hImg)return;
+  const s=Math.min(hKanvas.width/hImg.width,hKanvas.height/hImg.height);
+  zSt={s,tx:(hKanvas.width-hImg.width*s)/2,ty:(hKanvas.height-hImg.height*s)/2};
+  hCiz();
+}
+hKanvas.addEventListener("wheel",e=>{
+  e.preventDefault();
+  const r=hKanvas.getBoundingClientRect(),sc=hKanvas.width/r.width;
+  zAround((e.clientX-r.left)*sc,(e.clientY-r.top)*sc,e.deltaY<0?1.2:1/1.2);
+},{passive:false});
+hKanvas.addEventListener("dblclick",e=>{
+  if(!hImg)return;
+  const r=hKanvas.getBoundingClientRect(),sc=hKanvas.width/r.width;
+  const s0=Math.min(hKanvas.width/hImg.width,hKanvas.height/hImg.height);
+  if(zSt.s>s0*1.4)zoomSifirla();
+  else zAround((e.clientX-r.left)*sc,(e.clientY-r.top)*sc,2.5);
+});
+hKanvas.addEventListener("mousedown",e=>{
+  if(e.button!==0)return;
+  drag={on:true,moved:false,lx:e.clientX,ly:e.clientY};
+  hKanvas.style.cursor="grabbing";
+});
+window.addEventListener("mousemove",e=>{
+  if(!drag.on)return;
+  const sc=hKanvas.width/hKanvas.getBoundingClientRect().width;
+  if(Math.abs(e.clientX-drag.lx)+Math.abs(e.clientY-drag.ly)>6)drag.moved=true;
+  zSt.tx+=(e.clientX-drag.lx)*sc;zSt.ty+=(e.clientY-drag.ly)*sc;
+  drag.lx=e.clientX;drag.ly=e.clientY;clampZ();hCiz();
+});
+window.addEventListener("mouseup",()=>{drag.on=false;hKanvas.style.cursor="grab";setTimeout(()=>drag.moved=false,60);});
+hKanvas.addEventListener("touchstart",e=>{
+  if(e.touches.length===1){
+    drag={on:true,moved:false,lx:e.touches[0].clientX,ly:e.touches[0].clientY,
+          bx:e.touches[0].clientX,by:e.touches[0].clientY,bt:Date.now()};
+    ptch.on=false;
+  }
+  else if(e.touches.length===2){
+    drag.on=false;ptch.on=true;
+    const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;
+    ptch.d0=Math.hypot(dx,dy)||1;
+    ptch.mx=(e.touches[0].clientX+e.touches[1].clientX)/2;
+    ptch.my=(e.touches[0].clientY+e.touches[1].clientY)/2;
+    ptch.tx0=zSt.tx;ptch.ty0=zSt.ty;ptch.s0=zSt.s;
+  }
+  e.preventDefault();
+},{passive:false});
+hKanvas.addEventListener("touchmove",e=>{
+  const r=hKanvas.getBoundingClientRect(),sc=hKanvas.width/r.width;
+  if(e.touches.length===1&&drag.on){
+    zSt.tx+=(e.touches[0].clientX-drag.lx)*sc;zSt.ty+=(e.touches[0].clientY-drag.ly)*sc;
+    drag.lx=e.touches[0].clientX;drag.ly=e.touches[0].clientY;drag.moved=true;clampZ();hCiz();
+  }else if(e.touches.length===2&&ptch.on){
+    const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;
+    const f=Math.hypot(dx,dy)/ptch.d0;
+    const cx=(ptch.mx-r.left)*sc,cy=(ptch.my-r.top)*sc;
+    zSt.s=ptch.s0*f;zSt.tx=cx-(cx-ptch.tx0)*f;zSt.ty=cy-(cy-ptch.ty0)*f;clampZ();hCiz();
+  }
+  e.preventDefault();
+},{passive:false});
+hKanvas.addEventListener("touchend",e=>{
+  if(e.touches.length!==0)return;
+  const d=drag, t=e.changedTouches&&e.changedTouches[0];
+  const kaydirma=d.moved, sikistirma=ptch.on;
+  drag.on=false;ptch.on=false;
+  /* Kısa süreli, yer değiştirmemiş tek dokunuş = tıklama */
+  if(t&&!kaydirma&&!sikistirma&&d.bt&&Date.now()-d.bt<600){
+    const mesafe=Math.hypot(t.clientX-(d.bx??t.clientX),t.clientY-(d.by??t.clientY));
+    if(mesafe<12){
+      sonDokunmaT=Date.now();
+      haritaNoktaSec(t.clientX,t.clientY);
+    }
+  }
+  setTimeout(()=>drag.moved=false,80);
+});
+
+function scrToImg(ex,ey){
+  const r=hKanvas.getBoundingClientRect(),sc=hKanvas.width/r.width;
+  return{x:(((ex-r.left)*sc-zSt.tx)/zSt.s)/hImg.width,
+         y:(((ey-r.top)*sc-zSt.ty)/zSt.s)/hImg.height};
+}
+
+/* ── harita yükleme ── */
+function haritaYukle(inp){
+  const d=inp.files[0];if(!d)return;
+  const img=new Image();
+  img.onload=()=>{
+    const m=1800,o=Math.min(1,m/Math.max(img.width,img.height));
+    const c=document.createElement("canvas");
+    c.width=img.width*o;c.height=img.height*o;
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+    hVeri={img:c.toDataURL("image/jpeg",0.85),olcek:null};
+    try{localStorage.setItem("khem_harita",JSON.stringify({olcek:null,ozel:hVeri.img}));}catch(e){}
+    document.getElementById("hYukleKart").style.display="none";
+    haritaImgYukle();URL.revokeObjectURL(img.src);
+  };
+  img.src=URL.createObjectURL(d);
+}
+function haritaImgYukle(){
+  if(!hVeri)return;
+  hImg=new Image();
+  hImg.onload=()=>{hKanvas.width=hImg.width;hKanvas.height=hImg.height;zoomSifirla();kalibreDur();};
+  hImg.src=hVeri.img;
+}
+function kalibreDur(){
+  const el=document.getElementById("kalibreDurum");
+  if(!hVeri){el.textContent="";return;}
+  el.innerHTML=hVeri.olcek
+    ?`✅ Ölçek hazır — 1 piksel ≈ <b>${hVeri.olcek.toFixed(2)} m</b>`
+    :`⚠ Ölçek kalibre edilmedi. <b>📏 Kalibre Et</b> ile arası bilinen iki noktayı işaretleyin (örn. iki tank arası).`;
+}
+function haritaBaslat(){
+  let olcek=null,ozel=null;
+  try{
+    const s=localStorage.getItem("khem_harita");
+    if(s){const d=JSON.parse(s);olcek=d?.olcek||null;ozel=d?.ozel||null;}
+    if(!olcek){const p=localStorage.getItem("psg_harita");if(p){const d=JSON.parse(p);olcek=d?.olcek||null;}}
+  }catch(e){}
+  hVeri={img:ozel||IGSAS_MAP,olcek};
+  haritaImgYukle();
+}
+
+/* ── mod / mesaj ── */
+function msjGoster(t){
+  const d=document.getElementById("hMsj");
+  if(t){d.textContent=t;d.style.display="block";}else d.style.display="none";
+}
+function kalibrasyonBaslat(){
+  if(!hImg){alert("Harita henüz yüklenmedi.");return;}
+  if(hVeri.olcek&&!confirm("Ölçek zaten kalibre edilmiş (1 px ≈ "+hVeri.olcek.toFixed(2)+" m). Yeniden kalibre edilsin mi?"))return;
+  hMod="calib";calibPt=[];
+  msjGoster("📏 Arası bilinen iki noktaya dokunun · iptal için buraya dokunun");
+  hCiz();
+}
+function moduIptal(){
+  if(hMod==="yok")return;
+  hMod="yok";calibPt=[];msjGoster(null);hCiz();
+}
+function plumeKaynakSec(){
+  if(!sonHesap){alert("Önce dağılım hesabı yapın.");sayfaGec("kimyasal");return;}
+  if(!hVeri?.olcek){alert("Önce haritayı kalibre edin (📏 Kalibre Et).");sayfaGec("harita");return;}
+  sayfaGec("harita");
+  hMod="kaynak";
+  msjGoster("⚠ Salım kaynağının yerine dokunun · iptal için buraya dokunun");
+}
+function plumeSil(){plume=null;document.getElementById("hLgn").style.display="none";hCiz();}
+
+/* Dokunma ve fare için ortak nokta seçimi.
+   Not: touchstart'ta preventDefault çağrıldığı için mobilde sentetik "click"
+   olayı üretilmez; bu yüzden dokunuş touchend içinde ayrıca yakalanır. */
+let sonDokunmaT=0;
+
+function haritaNoktaSec(ekranX,ekranY){
+  if(!hImg)return;
+  if(hMod!=="calib"&&hMod!=="kaynak")return;
+  const p=scrToImg(ekranX,ekranY);
+  if(p.x<0||p.x>1||p.y<0||p.y>1)return;
+
+  if(hMod==="calib"){
+    calibPt.push(p);
+    hCiz();
+    if(calibPt.length===1){
+      msjGoster("📏 Şimdi ikinci noktaya dokunun");
+      return;
+    }
+    const dx=(calibPt[0].x-calibPt[1].x)*hImg.width;
+    const dy=(calibPt[0].y-calibPt[1].y)*hImg.height;
+    const pikselMesafe=Math.hypot(dx,dy);
+    if(pikselMesafe<8){
+      alert("İki nokta birbirine çok yakın. Daha uzak iki nokta seçin.");
+      calibPt=[];hCiz();
+      msjGoster("📏 Arası bilinen iki noktaya dokunun");
+      return;
+    }
+    setTimeout(()=>{
+      const cev=prompt("Bu iki nokta arası kaç metre?","100");
+      const m=parseFloat((cev||"").replace(",","."));
+      if(m>0){
+        hVeri.olcek=m/pikselMesafe;
+        try{
+          const kayit=JSON.parse(localStorage.getItem("khem_harita")||"{}");
+          kayit.olcek=hVeri.olcek;
+          localStorage.setItem("khem_harita",JSON.stringify(kayit));
+        }catch(err){}
+        kalibreDur();
+        if(plume)plumeOlustur(plume.x,plume.y);
+      }
+      hMod="yok";calibPt=[];msjGoster(null);hCiz();
+    },60);
+  }else{
+    hMod="yok";msjGoster(null);
+    plumeOlustur(p.x,p.y);
+  }
+}
+
+hKanvas.addEventListener("click",e=>{
+  if(Date.now()-sonDokunmaT<600)return;   /* dokunuş zaten işlendi */
+  if(drag.moved)return;
+  haritaNoktaSec(e.clientX,e.clientY);
+});
+
+/* ── yardımcı çizim ── */
+function rrect(c,x,y,w,h,r){
+  c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo(x+w,y,x+w,y+r);
+  c.lineTo(x+w,y+h-r);c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  c.lineTo(x+r,y+h);c.quadraticCurveTo(x,y+h,x,y+h-r);
+  c.lineTo(x,y+r);c.quadraticCurveTo(x,y,x+r,y);c.closePath();
+}
+function okCiz(c,x1,y1,x2,y2,renk,lw,hs){
+  const a=Math.atan2(y2-y1,x2-x1);
+  c.save();c.strokeStyle=renk;c.fillStyle=renk;c.lineWidth=lw;c.lineCap="round";
+  c.beginPath();c.moveTo(x1,y1);c.lineTo(x2-hs*0.6*Math.cos(a),y2-hs*0.6*Math.sin(a));c.stroke();
+  c.beginPath();c.moveTo(x2,y2);
+  c.lineTo(x2-hs*Math.cos(a-0.42),y2-hs*Math.sin(a-0.42));
+  c.lineTo(x2-hs*Math.cos(a+0.42),y2-hs*Math.sin(a+0.42));
+  c.closePath();c.fill();c.restore();
+}
+function etiketCiz(c,x,y,txt,renk,fs,S){
+  c.font="800 "+fs+"px system-ui";
+  const tw=c.measureText(txt).width,pad=6/S,bh=fs*1.55;
+  rrect(c,x-pad,y-bh*0.76,tw+pad*2,bh,5/S);
+  c.fillStyle=koyuMu()?"rgba(18,26,35,.94)":"rgba(255,255,255,.95)";
+  c.fill();
+  c.strokeStyle=renk;c.lineWidth=1.6/S;c.stroke();
+  c.fillStyle=renk;c.fillText(txt,x,y);
+  return tw;
+}
+
+/* ── ana çizim ── */
+function hCiz(){
+  if(!hImg||!hImg.complete)return;
+  hKtx.clearRect(0,0,hKanvas.width,hKanvas.height);
+  hKtx.save();
+  hKtx.translate(zSt.tx,zSt.ty);
+  hKtx.scale(zSt.s,zSt.s);
+  hKtx.drawImage(hImg,0,0);
+  const S=zSt.s;
+  if(calibPt.length){
+    hKtx.fillStyle="#1F5F9E";hKtx.strokeStyle="#fff";hKtx.lineWidth=2.5/S;
+    calibPt.forEach(p=>{hKtx.beginPath();hKtx.arc(p.x*hImg.width,p.y*hImg.height,8/S,0,7);hKtx.fill();hKtx.stroke();});
+    if(calibPt.length===2){
+      hKtx.setLineDash([7/S,4/S]);hKtx.strokeStyle="#1F5F9E";hKtx.lineWidth=2.5/S;
+      hKtx.beginPath();
+      hKtx.moveTo(calibPt[0].x*hImg.width,calibPt[0].y*hImg.height);
+      hKtx.lineTo(calibPt[1].x*hImg.width,calibPt[1].y*hImg.height);
+      hKtx.stroke();hKtx.setLineDash([]);
+    }
+  }
+  if(plume&&hVeri?.olcek)plumeCiz();
+  if(hImg&&typeof IGSAS_POI!=="undefined"){
+    IGSAS_POI.forEach(p=>{
+      const px=p.x*hImg.width, py=p.y*hImg.height;
+      const renk = p.tip==="toplanma" ? "#2D7A46" : (p.tip==="kaynak" ? "#1F5F9E" : "#C1121F");
+      hKtx.beginPath();
+      if(p.tip==="toplanma"){
+        hKtx.arc(px,py,7/S,0,7);
+        hKtx.fillStyle="rgba(45,122,70,.25)";
+        hKtx.fill();
+        hKtx.setLineDash([4/S,3/S]);
+      } else {
+        hKtx.arc(px,py,6/S,0,7);
+        hKtx.fillStyle="rgba(31,95,158,.25)";
+        hKtx.fill();
+      }
+      hKtx.lineWidth=2/S;
+      hKtx.strokeStyle=renk;
+      hKtx.stroke();
+      hKtx.setLineDash([]);
+    });
+  }
+  hKtx.restore();
+  setTimeout(miniKanvasCiz, 30); // sağ panel mini harita
+}
+
+/* ── plume oluştur ── */
+function plumeOlustur(fx,fy){
+  if(!sonHesap||!hVeri?.olcek)return;
+  const pr=[];
+  for(const e of sonHesap.hesaplar){
+    if(e.mesafe<=0)continue;
+    const N=36,prof=[{x:0,w:0}];
+    for(let i=1;i<=N;i++){
+      const x=e.mesafe*i/N;
+      const[sy]=sigmalar(sonHesap.sinif,x);
+      const C=sonHesap.hafif?gaussC(sonHesap.Q,sonHesap.u,sonHesap.sinif,x)
+              :yogunGazC(sonHesap.Q,sonHesap.u,sonHesap.sinif,x,sonHesap.yog);
+      prof.push({x,w:C>e.mg?sy*Math.sqrt(2*Math.log(C/e.mg)):0});
+    }
+    prof.push({x:e.mesafe,w:0});
+    pr.push({...e,prof,maksW:Math.max(...prof.map(p=>p.w))});
+  }
+  if(!pr.length){alert("Bu senaryoda çizilecek tehlike bölgesi oluşmadı.");return;}
+  plume={x:fx,y:fy,yonDeg:sonHesap.yonDeg,profiller:pr,kimyasal:sonHesap.kimyasal};
+  const v=KDB[sonHesap.kimyasal];
+  document.getElementById("hLgn").innerHTML=
+    `<div class="sr" style="font-weight:800;margin-bottom:5px">${v.duz} · ${sonHesap.u} m/s · ${sonHesap.sinif}</div>`+
+    pr.map(e=>`<div class="sr"><span class="nk" style="background:${e.renk}"></span>${e.ad} — ${mYaz(e.mesafe)}</div>`).join("");
+  document.getElementById("hLgn").style.display="block";
+  const kesen=toplanmaKesisimKontrol();
+  if(kesen.length){
+    const uy=document.getElementById("hUyari");
+    if(uy){
+      uy.style.display="block";
+      uy.innerHTML="🚨 DİKKAT: <b>"+kesen[0].poi.ad+"</b> bulut bölgesi içinde kaldı ("+kesen[0].esik+"). Personeli <b>Toplanma Alanı C</b>'ye yönlendirin.";
+    }
+  } else {
+    const uy=document.getElementById("hUyari");
+    if(uy)uy.style.display="none";
+  }
+  hCiz();
+}
+
+/* ── plume çiz ── */
+function plumeCiz(){
+  const W=hImg.width,H=hImg.height,S=zSt.s;
+  const cx=plume.x*W,cy=plume.y*H;
+  const rad=plume.yonDeg*Math.PI/180;
+  const ux=Math.sin(rad),uy=-Math.cos(rad),vx=-uy,vy=ux;
+  const opx=1/hVeri.olcek;
+  const v=KDB[plume.kimyasal]||{};
+
+  /* zonlar — büyükten küçüğe */
+  for(let i=plume.profiller.length-1;i>=0;i--){
+    const e=plume.profiller[i];
+    hKtx.beginPath();
+    e.prof.forEach((p,j)=>{
+      const px=cx+(ux*p.x+vx*p.w)*opx,py=cy+(uy*p.x+vy*p.w)*opx;
+      j?hKtx.lineTo(px,py):hKtx.moveTo(px,py);
+    });
+    for(let j=e.prof.length-1;j>=0;j--){
+      const p=e.prof[j];
+      hKtx.lineTo(cx+(ux*p.x-vx*p.w)*opx,cy+(uy*p.x-vy*p.w)*opx);
+    }
+    hKtx.closePath();
+    hKtx.fillStyle=e.renk+(koyuMu()?"55":"44");
+    hKtx.strokeStyle=e.renk;hKtx.lineWidth=2.4/S;
+    hKtx.fill();hKtx.stroke();
+  }
+
+  /* eksen çizgisi (rüzgâr altı yönü) */
+  const enUzak=plume.profiller[0].mesafe*opx;
+  hKtx.save();
+  hKtx.setLineDash([9/S,6/S]);
+  hKtx.strokeStyle=koyuMu()?"rgba(255,255,255,.75)":"rgba(20,30,45,.6)";
+  hKtx.lineWidth=1.6/S;
+  hKtx.beginPath();hKtx.moveTo(cx,cy);hKtx.lineTo(cx+ux*enUzak,cy+uy*enUzak);hKtx.stroke();
+  hKtx.restore();
+
+  /* etiketler — dışa açılan, üst üste binmeyen */
+  const fs=Math.max(9,13/S);
+  hKtx.textAlign="left";
+  const yon=(vx*0+1)>=0?1:1;
+  plume.profiller.forEach((e,i)=>{
+    if(e.mesafe<=0)return;
+    const oran=[0.82,0.60,0.38][i]??0.5;
+    const ex=e.mesafe*oran;
+    const np=e.prof.reduce((a,b)=>Math.abs(b.x-ex)<Math.abs(a.x-ex)?b:a,e.prof[0]);
+    const kenarX=cx+(ux*ex+vx*np.w)*opx, kenarY=cy+(uy*ex+vy*np.w)*opx;
+    const ofs=(26+i*4)/S;
+    const lx=kenarX+vx*ofs, ly=kenarY+vy*ofs;
+    /* bağlantı çizgisi */
+    hKtx.save();
+    hKtx.strokeStyle=e.renk;hKtx.lineWidth=1.4/S;hKtx.setLineDash([4/S,3/S]);
+    hKtx.beginPath();hKtx.moveTo(kenarX,kenarY);hKtx.lineTo(lx,ly);hKtx.stroke();
+    hKtx.restore();
+    hKtx.beginPath();hKtx.arc(kenarX,kenarY,3/S,0,7);hKtx.fillStyle=e.renk;hKtx.fill();
+    etiketCiz(hKtx,lx,ly,`${e.ad}  ${mYaz(e.mesafe)}`,e.renk,fs,S);
+  });
+
+  /* rüzgâr oku — kaynağın gerisinden gelir */
+  const okU=Math.min(Math.max(enUzak*0.22,60/S),130/S);
+  const bx=cx-ux*okU*1.9, by=cy-uy*okU*1.9;
+  okCiz(hKtx,bx,by,cx-ux*okU*0.55,cy-uy*okU*0.55,koyuMu()?"#EAF2FF":"#16324F",4/S,15/S);
+  const wfs=Math.max(9,12/S);
+  hKtx.font="800 "+wfs+"px system-ui";
+  const wtxt="RÜZGÂR "+sonHesap.u+" m/s";
+  const wtw=hKtx.measureText(wtxt).width;
+  etiketCiz(hKtx,bx-wtw/2,by-14/S,wtxt,koyuMu()?"#EAF2FF":"#16324F",wfs,S);
+
+  /* kaynak noktası */
+  const sr=11/S;
+  hKtx.beginPath();hKtx.arc(cx,cy,sr,0,7);
+  hKtx.fillStyle=koyuMu()?"#161F2A":"#FFFF";
+  hKtx.strokeStyle=v.renk||"#C1121F";hKtx.lineWidth=3.5/S;
+  hKtx.fill();hKtx.stroke();
+  const cr=5.5/S;
+  hKtx.strokeStyle=v.renk||"#C1121F";hKtx.lineWidth=2.6/S;
+  hKtx.beginPath();
+  hKtx.moveTo(cx-cr,cy);hKtx.lineTo(cx+cr,cy);
+  hKtx.moveTo(cx,cy-cr);hKtx.lineTo(cx,cy+cr);
+  hKtx.stroke();
+  const kfs=Math.max(9,12.5/S);
+  etiketCiz(hKtx,cx+sr+6/S,cy+kfs*0.38,`${v.duz||"?"} kaçak noktası`,v.renk||"#C1121F",kfs,S);
+}
+
+/* ════ SAĞ PANEL GÜNCELLEMELERİ ════ */
+function spSonucGuncelle(){
+  const el=document.getElementById("sp-sonuc-ic");
+  if(!el) return;
+  if(!sonHesap){
+    el.innerHTML='<div class="sp-bos">📊 Hesaplama yapılmadı.</div>';
+    return;
+  }
+  const v=KDB[sonHesap.kimyasal];
+  const enUzak=Math.max(...sonHesap.hesaplar.map(e=>e.mesafe),1);
+  let h=`<div style="display:flex;align-items:center;gap:7px;margin-bottom:7px">
+    <span style="font-size:18px;font-weight:800;color:${v.renk}">${v.duz}</span>
+    <span style="font-size:12px;color:var(--soluk)">${v.ad} · ${sonHesap.u} m/s · ${sonHesap.sini
