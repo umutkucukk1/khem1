@@ -1754,4 +1754,75 @@ function spSonucGuncelle(){
   const enUzak=Math.max(...sonHesap.hesaplar.map(e=>e.mesafe),1);
   let h=`<div style="display:flex;align-items:center;gap:7px;margin-bottom:7px">
     <span style="font-size:18px;font-weight:800;color:${v.renk}">${v.duz}</span>
-    <span style="font-size:12px;color:var(--soluk)">${v.ad} · ${sonHesap.u} m/s · ${sonHesap.sini
+    <span style="font-size:12px;color:var(--soluk)">${v.ad} · ${sonHesap.u} m/s · ${sonHesap.sinif}</span>
+  </div>`;
+  for(const e of sonHesap.hesaplar){
+    h+=`<div class="sp-bant" style="--bk:${e.renk}"><span class="ad">${e.ad}</span><span class="msf">${mYaz(e.mesafe)}</span></div>`;
+  }
+  if(sonHesap.lelMesafe!=null){
+    h+=`<div class="sp-bant" style="--bk:#2D7A46"><span class="ad">LEL</span><span class="msf">${mYaz(sonHesap.lelMesafe)}</span></div>`;
+  }
+  el.innerHTML=h;
+}
+
+function spFlashNot(){
+  const el=document.getElementById("sp-flash-not");
+  if(!el)return;
+  const aktif=secKimyasal==="NH3"&&sonHesap?.kimyasal==="NH3"&&sonHesap.flashFrac!=null;
+  el.style.display=aktif?"block":"none";
+  if(aktif){
+    el.textContent="NH₃ hesap özeti · Flaş fraksiyonu: %"+(sonHesap.flashFrac*100).toFixed(1)+" · Bulut yoğunluğu: "+sonHesap.flashRho.toFixed(2)+" kg/m³";
+  }
+}
+
+function miniKanvasCiz(){
+  const canvas=document.getElementById("miniKanvas");
+  const wrap=document.getElementById("sp-mini-wrap");
+  if(!canvas||!wrap||wrap.clientWidth===0)return;
+  const w=wrap.clientWidth,h=180,dpr=window.devicePixelRatio||1;
+  canvas.width=Math.round(w*dpr);
+  canvas.height=Math.round(h*dpr);
+  canvas.style.height=h+"px";
+  const ctx=canvas.getContext("2d");
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+  if(!hImg||!hImg.complete||!hImg.naturalWidth){
+    ctx.fillStyle=koyuMu()?"#D6DEE9":"#16202B";
+    ctx.font="12px system-ui";
+    ctx.textAlign="center";
+    ctx.fillText("Tesis görüntüsü yüklenmedi",w/2,h/2);
+    return;
+  }
+  const s=Math.min(w/hKanvas.width,h/hKanvas.height);
+  ctx.drawImage(hKanvas,(w-hKanvas.width*s)/2,(h-hKanvas.height*s)/2,hKanvas.width*s,hKanvas.height*s);
+  const durum=document.getElementById("sp-kalib-dur");
+  if(durum)durum.textContent=hVeri?.olcek?"Ölçek kalibre edildi.":"Etki çizimi için ölçek kalibrasyonu gerekiyor.";
+}
+
+function khemBaslat(){
+  kmGridYap();
+  adimGoster();
+  senaryoListeCiz();
+  gecmisListeYenile();
+  sonucGoster();
+  spFlashNot();
+  haritaBaslat();
+  if(hImg){
+    hImg.onerror=function(){
+      hImg=null;
+      document.getElementById("kalibreDurum").textContent="Tesis görüntüsü yüklenemedi. Değiştir düğmesiyle gerçek bir görüntü yükleyin.";
+      document.getElementById("hYukleKart").style.display="block";
+      miniKanvasCiz();
+    };
+  }
+  miniKanvasCiz();
+}
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",khemBaslat,{once:true});
+}else{
+  khemBaslat();
+}
+window.addEventListener("resize",miniKanvasCiz);
+</script>
+</body>
+</html>
